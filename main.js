@@ -9,7 +9,7 @@ function buildFundamentals() {
     1,
     1000
   );
-  camera.position.set(20, 20, 20);
+  camera.position.set(0, 0, 30);
   camera.lookAt(scene.position);
   const renderer = new THREE.WebGLRenderer();
   document.body.appendChild(renderer.domElement);
@@ -22,4 +22,23 @@ const { scene, camera, renderer } = buildFundamentals();
 const enemyShip = new EnemyShip();
 scene.add(enemyShip.ship);
 
-renderer.render(scene, camera);
+let direction = "left";
+
+function update() {
+  requestAnimationFrame(update);
+  const shipSpeed = 0.4;
+  moveEnemyShip(shipSpeed);
+  renderer.render(scene, camera);
+}
+
+function moveEnemyShip(speed) {
+  // Até onde a nave chega no eixo x
+  const threshold = 15;
+  const shipPositionX = enemyShip.ship.position.x;
+  // Se passar o threshold, a nave muda de direção
+  if (shipPositionX >= threshold) direction = "left";
+  else if (shipPositionX <= threshold * -1) direction = "right";
+  enemyShip.move(direction, speed);
+}
+
+update();
