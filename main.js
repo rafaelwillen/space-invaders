@@ -41,4 +41,15 @@ function moveEnemyShip(speed) {
   enemyShip.move(direction, speed);
 }
 
+// Adiciona responsividade na cena
+window.addEventListener(
+  "resize",
+  () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  },
+  false
+);
+
 update();
