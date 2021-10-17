@@ -1,19 +1,52 @@
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-const nave = new NavePlayer();
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-const player = nave.createNavePlayer();
-scene.add( player );
-
-camera.position.z = 3;
-nave.movePlayer(player);
-
-function animate() {
-    renderer.render( scene, camera );
+function buildFundamentals() {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    innerWidth / innerHeight,
+    1,
+    1000
+  );
+  camera.position.set(0, 0, 30);
+  camera.lookAt(scene.position);
+  const renderer = new THREE.WebGLRenderer();
+  document.body.appendChild(renderer.domElement);
+  renderer.setSize(innerWidth, innerHeight);
+  return { scene, camera, renderer };
 }
-animate();
- 
+
+const { scene, camera, renderer } = buildFundamentals();
+
+const enemyShip = new EnemyShip();
+scene.add(enemyShip.ship);
+
+let direction = "left";
+
+function update() {
+  requestAnimationFrame(update);
+  const shipSpeed = 0.4;
+  moveEnemyShip(shipSpeed);
+  renderer.render(scene, camera);
+}
+
+function moveEnemyShip(speed) {
+  // Até onde a nave chega no eixo x
+  const threshold = 15;
+  const shipPositionX = enemyShip.ship.position.x;
+  // Se passar o threshold, a nave muda de direção
+  if (shipPositionX >= threshold) direction = "left";
+  else if (shipPositionX <= threshold * -1) direction = "right";
+  enemyShip.move(direction, speed);
+}
+
+// Adiciona responsividade na cena
+window.addEventListener(
+  "resize",
+  () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  },
+  false
+);
+
+update();

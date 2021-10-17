@@ -1,6 +1,6 @@
-class NavePlayer {
+class PlayerShip {
     speedPlayer = 0.56;
-    createNavePlayer() {
+    creaPlayerShip() {
         const geometry = new THREE.BoxGeometry();
         const material = new THREE.MeshBasicMaterial({ color: '#cacaca' });
         const cube = new THREE.Mesh(geometry, material);
@@ -11,10 +11,8 @@ class NavePlayer {
     movePlayer(player) {
         addEventListener('keydown', (event) => {
             // console.log("Move the player", event.key);
-            if (event.key == 'ArrowUp') {
+            if (event.key == 'ArrowUp') 
                 player.position.y += this.speedPlayer;
-
-            }
             else if (event.key == 'ArrowDown')
                 player.position.y -= this.speedPlayer;
 
