@@ -1,7 +1,7 @@
 class EnemyShip {
     constructor() {
       // Cria um grupo para juntar várias partes da nave
-      this.ship = new Group();
+      this.ship = new THREE.Group();
       this.ship.name = "nave-inimiga";
       // Cria uma simples caixa verde 10x10x10
       this.basicBox = this.buildBasicBox();
@@ -9,10 +9,10 @@ class EnemyShip {
     }
   
     buildBasicBox() {
-      const geometry = new BoxGeometry(10, 10, 10);
+      const geometry = new THREE.BoxGeometry(10, 10, 10);
       // Cor verde
-      const material = new MeshBasicMaterial({ color: 0x00ff00 });
-      const mesh = new Mesh(geometry, material);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const mesh = new THREE.Mesh(geometry, material);
       return mesh;
     }
   
