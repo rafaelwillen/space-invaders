@@ -22,9 +22,6 @@ class PlayerShip {
 
             else if (event.key == 'ArrowRight')
                 player.position.x += this.speedPlayer;
-
-
-            requestAnimationFrame(animate);
         })
     }
 

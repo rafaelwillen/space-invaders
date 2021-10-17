@@ -17,8 +17,12 @@ function buildFundamentals() {
 const { scene, camera, renderer } = buildFundamentals();
 
 const enemyShip = new EnemyShip();
+const ship = new PlayerShip();
+const playerShip = ship.creaPlayerShip()
 scene.add(enemyShip.ship);
+scene.add(playerShip);
 
+ship.movePlayer(playerShip);
 let direction = "left";
 
 function update() {
