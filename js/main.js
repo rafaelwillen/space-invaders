@@ -1,5 +1,31 @@
-function buildFundamentals() {
-  const scene = new THREE.Scene();
+const scene = new THREE.Scene();
+const renderer = new THREE.WebGLRenderer();
+const camera = buildPerspectiveCamera();
+
+const enemyShip = new EnemyShip();
+const playerShip = new PlayerShip();
+
+start();
+
+function start() {
+  document.body.appendChild(renderer.domElement);
+  renderer.setSize(innerWidth, innerHeight);
+
+  const playerShip3DObject = playerShip.create3DObject();
+  scene.add(playerShip3DObject);
+  scene.add(enemyShip.shipObject);
+  playerShip.movePlayer(playerShip3DObject);
+
+  update();
+}
+
+function update() {
+  requestAnimationFrame(update);
+  enemyShip.move(20);
+  renderer.render(scene, camera);
+}
+
+function buildPerspectiveCamera() {
   const camera = new THREE.PerspectiveCamera(
     75,
     innerWidth / innerHeight,
@@ -8,38 +34,8 @@ function buildFundamentals() {
   );
   camera.position.set(0, 0, 30);
   camera.lookAt(scene.position);
-  const renderer = new THREE.WebGLRenderer();
-  document.body.appendChild(renderer.domElement);
-  renderer.setSize(innerWidth, innerHeight);
-  return { scene, camera, renderer };
-}
-
-const { scene, camera, renderer } = buildFundamentals();
-
-const enemyShip = new EnemyShip();
-const ship = new PlayerShip();
-const playerShip = ship.createPlayerShip();
-scene.add(enemyShip.ship);
-scene.add(playerShip);
-
-ship.movePlayer(playerShip);
-let direction = "left";
-
-function update() {
-  requestAnimationFrame(update);
-  const shipSpeed = 0.4;
-  moveEnemyShip(shipSpeed);
-  renderer.render(scene, camera);
-}
-
-function moveEnemyShip(speed) {
-  // Até onde a nave chega no eixo x
-  const threshold = 15;
-  const shipPositionX = enemyShip.ship.position.x;
-  // Se passar o threshold, a nave muda de direção
-  if (shipPositionX >= threshold) direction = "left";
-  else if (shipPositionX <= threshold * -1) direction = "right";
-  enemyShip.move(direction, speed);
+  camera.name = "main-camera";
+  return camera;
 }
 
 // Adiciona responsividade na cena
@@ -52,5 +48,3 @@ window.addEventListener(
   },
   false
 );
-
-update();

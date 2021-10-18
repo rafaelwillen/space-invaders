@@ -1,6 +1,6 @@
 class PlayerShip {
   speedPlayer = 0.56;
-  createPlayerShip() {
+  create3DObject() {
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: "#cacaca" });
     const cube = new THREE.Mesh(geometry, material);
