@@ -10,6 +10,13 @@ const material = new THREE.MeshBasicMaterial( { color: '#fff' } );
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 
+// Adiciona responsividade na cena
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
 camera.position.z = 3;
 
 renderer.render(scene, camera);
