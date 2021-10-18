@@ -18,7 +18,7 @@ const { scene, camera, renderer } = buildFundamentals();
 
 const enemyShip = new EnemyShip();
 const ship = new PlayerShip();
-const playerShip = ship.creaPlayerShip()
+const playerShip = ship.createPlayerShip();
 scene.add(enemyShip.ship);
 scene.add(playerShip);
 
