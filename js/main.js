@@ -11,8 +11,9 @@ function start() {
   document.body.appendChild(renderer.domElement);
   renderer.setSize(innerWidth, innerHeight);
 
-  const playerShip3DObject = playerShip.create3DObject();
+  const playerShip3DObject = playerShip.create3DObject(10,10,10);
   scene.add(playerShip3DObject);
+  enemyShip.shipObject.position.z = -20;
   scene.add(enemyShip.shipObject);
   playerShip.movePlayer(playerShip3DObject);
 
