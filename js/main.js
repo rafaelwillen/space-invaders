@@ -7,7 +7,11 @@ const playerShip = new PlayerShip();
 
 start();
 
+/**
+ * Cria todos os objetos da cena. Chamada apenas uma vez
+ */
 function start() {
+  // Adiciona o renderizador na DOM
   document.body.appendChild(renderer.domElement);
   renderer.setSize(innerWidth, innerHeight);
 
@@ -25,32 +29,26 @@ function start() {
   // Por padrão, seleciona a câmera frontal
   selectedCamera = cameras[0];
 
+  // Cria a nave do herói
   const playerShip3DObject = playerShip.create3DObject(10, 10, 10);
+  playerShip.movePlayer(playerShip3DObject);
   scene.add(playerShip3DObject);
+
+  // Cria a nave do vilão
   enemyShip.shipObject.position.z = -20;
   scene.add(enemyShip.shipObject);
-  playerShip.movePlayer(playerShip3DObject);
 
   update();
 }
 
+/**
+ * Responsável por renderizar a cena e os seus objetos. Chamada a cada frame
+ */
 function update() {
   requestAnimationFrame(update);
+  // Move a nave inimiga sem nenhum input do utilizador. O limite do movimento é de -20 até 20
   enemyShip.move(20);
   renderer.render(scene, selectedCamera);
-}
-
-function buildPerspectiveCamera() {
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    innerWidth / innerHeight,
-    1,
-    1000
-  );
-  camera.position.set(0, 0, 30);
-  camera.lookAt(scene.position);
-  camera.name = "main-camera";
-  return camera;
 }
 
 // Adiciona responsividade na cena
