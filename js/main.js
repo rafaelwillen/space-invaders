@@ -1,5 +1,4 @@
-const scene = new THREE.Scene();
-const renderer = new THREE.WebGLRenderer();
+const { scene, renderer } = SceneBuilder.createEssentials();
 let selectedCamera;
 
 const enemyShip = new EnemyShip();
@@ -11,32 +10,49 @@ start();
  * Cria todos os objetos da cena. Chamada apenas uma vez
  */
 function start() {
-  // Adiciona o renderizador na DOM
-  document.body.appendChild(renderer.domElement);
-  renderer.setSize(innerWidth, innerHeight);
-
   // Armazena as três câmeras do jogo: frontal, de topo, lateral
   const cameras = [
-    CameraBuilder.buildPerspectiveCamera({ z: 40, name: "front" }),
-    CameraBuilder.buildPerspectiveCamera({ x: 40, name: "side" }),
-    CameraBuilder.buildPerspectiveCamera({ y: 40, name: "top" }),
+    CameraBuilder.buildPerspectiveCamera({
+      z: 20,
+      y: 5,
+      rotationX: Math.PI * -0.1,
+      name: "front",
+    }),
+    CameraBuilder.buildPerspectiveCamera({
+      x: 20,
+      y: 3,
+      name: "side",
+      rotationX: Math.PI * -0.5,
+      rotationY: Math.PI * 0.44,
+      rotationZ: Math.PI * 0.5,
+    }),
+    CameraBuilder.buildPerspectiveCamera({
+      y: 22.5,
+      name: "top",
+      rotationX: Math.PI * -0.5,
+    }),
   ];
   // Adiciona cada câmera na cena para ser referenciada pelo nome
   cameras.forEach((camera) => {
-    camera.lookAt(scene.position);
+    // camera.lookAt(scene.position);
     scene.add(camera);
   });
   // Por padrão, seleciona a câmera frontal
   selectedCamera = cameras[0];
 
+  // Cria o piso
+  const floor = SceneBuilder.createFloor(60, 30);
+  scene.add(floor);
+
   // Cria a nave do herói
-  const playerShip3DObject = playerShip.create3DObject(10, 10, 10);
+  const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
+  playerShip3DObject.position.set(0, 1.5, 12);
   playerShip.movePlayer(playerShip3DObject);
   scene.add(playerShip3DObject);
 
-  // Cria a nave do vilão
-  enemyShip.shipObject.position.z = -20;
-  scene.add(enemyShip.shipObject);
+  // // Cria a nave do vilão
+  // enemyShip.shipObject.position.z = -20;
+  // scene.add(enemyShip.shipObject);
 
   update();
 }
