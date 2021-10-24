@@ -34,16 +34,6 @@ function CriarBackGround() {
     Scene.add(mesh)
 }
 
-function animar() {
-    requestAnimationFrame(animar)
-    
-  //animacao das estrelas
-  //  mesh.rotation.z += 0.2
-    renderer.render(Scene, camera)
-
-}
-
-
 function Criarcena() {
 
     Scene = new THREE.Scene();
@@ -56,26 +46,6 @@ function Criarcena() {
     mesh.rotation.x += 11.45
     renderer.render(Scene, camera)
    
-    //animar()
-}
-
-
-
-
-function MudarCamera(e) {
-    switch (e.keyCode) {
-        case '1':
-            Vista(1)
-            break
-        case '2': Vista(2)
-            break;
-        case '3': Vista(3)
-            break
-
-        default:
-            Vista(1)
-            break
-    }
 }
 
 
