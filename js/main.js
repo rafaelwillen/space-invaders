@@ -13,8 +13,8 @@ function start() {
   // Armazena as três câmeras do jogo: frontal, de topo, lateral
   const cameras = [
     CameraBuilder.buildPerspectiveCamera({
-      z: 20,
-      y: 5,
+      z: 25,
+      y: 8,
       rotationX: Math.PI * -0.1,
       name: "front",
     }),
@@ -47,12 +47,12 @@ function start() {
   // Cria a nave do herói
   const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
   playerShip3DObject.position.set(0, 1.5, 12);
-  playerShip.movePlayer(playerShip3DObject);
+  playerShip.movePlayer(playerShip3DObject, 20);
   scene.add(playerShip3DObject);
 
-  // // Cria a nave do vilão
-  // enemyShip.shipObject.position.z = -20;
-  // scene.add(enemyShip.shipObject);
+  // Cria a nave do vilão
+  enemyShip.shipObject.position.set(0, 1.5, -8);
+  scene.add(enemyShip.shipObject);
 
   update();
 }

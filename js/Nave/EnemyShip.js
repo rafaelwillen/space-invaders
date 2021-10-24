@@ -11,7 +11,7 @@ class EnemyShip {
   }
 
   buildBasicBox() {
-    const geometry = new THREE.BoxGeometry(10, 10, 10);
+    const geometry = new THREE.BoxGeometry(2, 1, 3);
     // Cor verde
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const mesh = new THREE.Mesh(geometry, material);

@@ -7,12 +7,18 @@ class PlayerShip {
     return cube;
   }
 
-  movePlayer(player) {
+  movePlayer(player, threshold) {
     addEventListener("keydown", (event) => {
-      // if (event.key == "ArrowUp") player.position.z -= this.speedPlayer;
-      // else if (event.key == "ArrowDown") player.position.z += this.speedPlayer;
-      if (event.key == "ArrowLeft") player.position.x -= this.speedPlayer;
-      else if (event.key == "ArrowRight") player.position.x += this.speedPlayer;
+      switch (event.key) {
+        case "ArrowLeft":
+          if (player.position.x >= threshold * -1)
+            player.position.x -= this.speedPlayer;
+          break;
+        case "ArrowRight":
+          if (player.position.x <= threshold)
+            player.position.x += this.speedPlayer;
+          break;
+      }
     });
   }
 }
