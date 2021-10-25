@@ -46,12 +46,12 @@ function start() {
 
   // Cria a nave do herói
   const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
-  playerShip3DObject.position.set(0, 1.5, 12);
+  playerShip3DObject.position.set(0, 1.5, -8);
   playerShip.movePlayer(playerShip3DObject, 20);
   scene.add(playerShip3DObject);
 
   // Cria a nave do vilão
-  enemyShip.shipObject.position.set(0, 1.5, -8);
+  enemyShip.shipObject.position.set(0, 1.5, 12);
   scene.add(enemyShip.shipObject);
 
   update();
