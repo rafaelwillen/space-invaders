@@ -20,3 +20,5 @@ class CameraBuilder {
     return camera;
   }
 }
+
+export default CameraBuilder;
