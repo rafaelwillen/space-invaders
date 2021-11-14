@@ -1,3 +1,5 @@
+import { PerspectiveCamera } from "../library/three.module.js";
+
 class CameraBuilder {
   static buildPerspectiveCamera({
     x = 0,
@@ -8,7 +10,7 @@ class CameraBuilder {
     rotationY = 0,
     rotationZ = 0,
   }) {
-    const camera = new THREE.PerspectiveCamera(
+    const camera = new PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       1,

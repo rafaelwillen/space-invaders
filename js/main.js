@@ -4,61 +4,65 @@ import CameraBuilder from "./scene/cameraBuilder.js";
 const { scene, renderer } = SceneBuilder.createEssentials();
 let selectedCamera;
 
+/**
+ * Cria todos os objetos da cena. Chamado apenas uma vez
+ */
 function start() {
   // Armazena as três cameras do jogo: frontal, de topo, lateral
-  const cameras = [];
+  const cameras = [
+    CameraBuilder.buildPerspectiveCamera({
+      z: 25,
+      y: 8,
+      rotationX: Math.PI * -0.1,
+      name: "front",
+    }),
+    CameraBuilder.buildPerspectiveCamera({
+      x: 20,
+      y: 3,
+      name: "side",
+      rotationX: Math.PI * -0.5,
+      rotationY: Math.PI * 0.44,
+      rotationZ: Math.PI * 0.5,
+    }),
+    CameraBuilder.buildPerspectiveCamera({
+      y: 22.5,
+      name: "top",
+      rotationX: Math.PI * -0.5,
+    }),
+  ];
+  // Adiciona cada camera na cena para ser referenciada pelo nome
+  cameras.forEach((camera) => {
+    scene.add(camera);
+  });
+  // Por padrão, seleciona a camera frontal
+  selectedCamera = cameras[0];
+
+  // Cria o piso
+  const floor = SceneBuilder.createFloor(60, 30);
+  scene.add(floor);
+
+  // TODO: Add nave do herói
+
+  // TODO: Add nave do vilão
+
+  update();
 }
 
-function update() {}
+function update() {
+  requestAnimationFrame(update);
+  // TODO: Move enemy ship
+  renderer.render(scene, selectedCamera);
+}
 
 start();
 
-// const { scene, renderer } = SceneBuilder.createEssentials();
-// let selectedCamera;
-
 // const enemyShip = new EnemyShip();
 // const playerShip = new PlayerShip();
-
-// start();
 
 // /**
 //  * Cria todos os objetos da cena. Chamada apenas uma vez
 //  */
 // function start() {
-//   // Armazena as três câmeras do jogo: frontal, de topo, lateral
-//   const cameras = [
-//     CameraBuilder.buildPerspectiveCamera({
-//       z: 25,
-//       y: 8,
-//       rotationX: Math.PI * -0.1,
-//       name: "front",
-//     }),
-//     CameraBuilder.buildPerspectiveCamera({
-//       x: 20,
-//       y: 3,
-//       name: "side",
-//       rotationX: Math.PI * -0.5,
-//       rotationY: Math.PI * 0.44,
-//       rotationZ: Math.PI * 0.5,
-//     }),
-//     CameraBuilder.buildPerspectiveCamera({
-//       y: 22.5,
-//       name: "top",
-//       rotationX: Math.PI * -0.5,
-//     }),
-//   ];
-//   // Adiciona cada câmera na cena para ser referenciada pelo nome
-//   cameras.forEach((camera) => {
-//     // camera.lookAt(scene.position);
-//     scene.add(camera);
-//   });
-//   // Por padrão, seleciona a câmera frontal
-//   selectedCamera = cameras[0];
-
-//   // Cria o piso
-//   const floor = SceneBuilder.createFloor(60, 30);
-//   scene.add(floor);
-
 //   // Cria a nave do herói
 //   const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
 //   playerShip3DObject.position.set(0, 1.5, -8);
