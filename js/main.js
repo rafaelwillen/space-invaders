@@ -1,8 +1,13 @@
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
+import EnemyShip from "./ships/enemyShip.js";
+import PlayerShip from "./ships/playerShip.js";
 
 const { scene, renderer } = SceneBuilder.createEssentials();
 let selectedCamera;
+
+const enemyShip = new EnemyShip();
+const playerShip = new PlayerShip();
 
 /**
  * Cria todos os objetos da cena. Chamado apenas uma vez
@@ -41,9 +46,15 @@ function start() {
   const floor = SceneBuilder.createFloor(60, 30);
   scene.add(floor);
 
-  // TODO: Add nave do herói
+  // Cria a nave do herói
+  const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
+  playerShip3DObject.position.set(0, 1.5, -8);
+  playerShip.movePlayer(playerShip3DObject, 20);
+  scene.add(playerShip3DObject);
 
-  // TODO: Add nave do vilão
+  // Cria a nave do vilão
+  enemyShip.shipObject.position.set(0, 1.5, 12);
+  scene.add(enemyShip.shipObject);
 
   // Adiciona responsividade na cena
   window.addEventListener("resize", windowResizeEvent);
@@ -57,7 +68,8 @@ function start() {
  */
 function update() {
   requestAnimationFrame(update);
-  // TODO: Move enemy ship
+  // Move a nave inimiga sem nenhum input do utilizador. O limite do movimento é de -20 até 20
+  enemyShip.move(20);
   renderer.render(scene, selectedCamera);
 }
 
@@ -91,33 +103,3 @@ function cameraChangeEvent(e) {
       break;
   }
 }
-
-// const enemyShip = new EnemyShip();
-// const playerShip = new PlayerShip();
-
-// /**
-//  * Cria todos os objetos da cena. Chamada apenas uma vez
-//  */
-// function start() {
-//   // Cria a nave do herói
-//   const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
-//   playerShip3DObject.position.set(0, 1.5, -8);
-//   playerShip.movePlayer(playerShip3DObject, 20);
-//   scene.add(playerShip3DObject);
-
-//   // Cria a nave do vilão
-//   enemyShip.shipObject.position.set(0, 1.5, 12);
-//   scene.add(enemyShip.shipObject);
-
-//   update();
-// }
-
-// /**
-//  * Responsável por renderizar a cena e os seus objetos. Chamada a cada frame
-//  */
-// function update() {
-//   requestAnimationFrame(update);
-//   // Move a nave inimiga sem nenhum input do utilizador. O limite do movimento é de -20 até 20
-//   enemyShip.move(20);
-//   renderer.render(scene, selectedCamera);
-// }
