@@ -16,21 +16,21 @@ function start() {
   // Armazena as três cameras do jogo: frontal, de topo, lateral
   const cameras = [
     CameraBuilder.buildPerspectiveCamera({
-      z: 25,
-      y: 8,
+      z: 55,
+      y: 15,
       rotationX: Math.PI * -0.1,
       name: "front",
     }),
     CameraBuilder.buildPerspectiveCamera({
-      x: 20,
-      y: 3,
+      x: 50,
+      y: 10,
       name: "side",
       rotationX: Math.PI * -0.5,
       rotationY: Math.PI * 0.44,
       rotationZ: Math.PI * 0.5,
     }),
     CameraBuilder.buildPerspectiveCamera({
-      y: 22.5,
+      y: 50,
       name: "top",
       rotationX: Math.PI * -0.5,
     }),

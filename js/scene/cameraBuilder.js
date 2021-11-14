@@ -11,7 +11,7 @@ class CameraBuilder {
     rotationZ = 0,
   }) {
     const camera = new PerspectiveCamera(
-      75,
+      45,
       window.innerWidth / window.innerHeight,
       1,
       100
