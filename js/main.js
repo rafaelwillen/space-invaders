@@ -47,7 +47,7 @@ function start() {
   scene.add(floor);
 
   // Cria a nave do herói
-  const playerShip3DObject = playerShip.create3DObject(2, 1, 3);
+  const playerShip3DObject = playerShip.build();
   playerShip3DObject.position.set(0, 1.5, -8);
   playerShip.movePlayer(playerShip3DObject, 20);
   scene.add(playerShip3DObject);
