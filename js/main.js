@@ -1,4 +1,8 @@
-import { PerspectiveCamera, Vector3 } from "./library/three.module.js";
+import {
+  Object3D,
+  PerspectiveCamera,
+  Vector3,
+} from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -23,6 +27,20 @@ const CameraControls = {
     camera.position.z =
       z * Math.cos(rotationSpeed) - x * Math.sin(rotationSpeed);
     camera.lookAt(scenePosition);
+  },
+  /**
+   * Faz com que uma camera perspetiva siga um objeto. Similar a camera de
+   * terceira pessoa.
+   * @param {PerspectiveCamera} camera A camera
+   * @param {Object3D} object O objeto a ser seguido
+   * @param {number} distanceToObject A distância do objeto até a camera. Não pode ser negativa
+   */
+  followObject(camera, object, distanceToObject) {
+    const { x, y, z } = object.position;
+    if (distanceToObject < 0)
+      throw new Error("Distância não pode ser negativa");
+    camera.position.set(x, y, z + distanceToObject);
+    camera.lookAt(object.position);
   },
 };
 
@@ -92,10 +110,12 @@ function start() {
  */
 function update() {
   requestAnimationFrame(update);
+  enemyShip.move(20);
   if (selectedCamera.name === "dynamic360") {
     CameraControls.rotateAroundScene(selectedCamera, scene.position);
   } else if (selectedCamera.name === "dynamicBullet") {
-    console.log("Bullet Camera");
+    // TODO: Mudar isto para ser a bala
+    CameraControls.followObject(selectedCamera, enemyShip.shipObject, 10);
   }
 
   renderer.render(scene, selectedCamera);
