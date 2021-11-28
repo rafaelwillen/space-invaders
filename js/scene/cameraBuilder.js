@@ -14,7 +14,7 @@ class CameraBuilder {
       45,
       window.innerWidth / window.innerHeight,
       1,
-      100
+      500
     );
     camera.name = name;
     camera.position.set(x, y, z);
