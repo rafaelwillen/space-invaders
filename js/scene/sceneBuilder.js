@@ -4,17 +4,31 @@ import {
   Mesh,
   Scene,
   WebGLRenderer,
+  Group,
+  DoubleSide,
+  BoxGeometry,
+  Math,
 } from "../library/three.module.js";
 
 class SceneBuilder {
-  static createFloor(width = 40, height = 40) {
-    const geometry = new PlaneGeometry(width, height);
-    const material = new MeshBasicMaterial({
-      color: 0xbbbbbb,
-    });
-    const mesh = new Mesh(geometry, material);
-    mesh.rotation.x = Math.PI * -0.5;
-    return mesh;
+  /**
+   * Cria o cenário com o piso e 4 paredes
+   * @param {number} width : O comprimento do cenário;
+   * @param {number} height: A largura do cenário;
+   * @param {string} floorColor: A cor do piso. Por defeito é cinza
+   * @param {string} wallColor: A cor da parede. Por defeito é cinza escuro
+   * @returns {Group} O cenário
+   */
+  static createScenario(width = 100, height = 50, floorColor, wallColor) {
+    const scenario = new Group();
+    const floor = buildFloor(width, height, floorColor);
+    const floorDimensions = floor.geometry.parameters;
+    const rightWall = buildWall("right", height, 5, floorDimensions, wallColor);
+    const leftWall = buildWall("left", height, 5, floorDimensions, wallColor);
+    const backWall = buildWall("back", width, 5, floorDimensions, wallColor);
+    const frontWall = buildWall("front", width, 5, floorDimensions, wallColor);
+    scenario.add(floor, rightWall, leftWall, backWall, frontWall);
+    return scenario;
   }
 
   static createEssentials() {
@@ -26,4 +40,71 @@ class SceneBuilder {
   }
 }
 
+/**
+ * Cria o piso do cenário
+ * @param {number} width: O comprimento do piso ;
+ * @param {number} height: A largura do piso ;
+ * @param {string} color: A cor do piso. Por defeito é cinza
+ * @returns {mesh} O mesh do piso
+ */
+function buildFloor(width, height, color = "#bbb") {
+  const geometry = new PlaneGeometry(width, height);
+  const material = new MeshBasicMaterial({
+    color,
+    side: DoubleSide,
+  });
+  const mesh = new Mesh(geometry, material);
+  mesh.rotation.x = Math.degToRad(-90);
+  return mesh;
+}
+
+/**
+ * Cria uma parede para o cenário
+ * @param {"right" | "left" | "back" | "front"} position : Qual lado da parede;
+ * @param {number} width: A largura da parede
+ * @param {number} height: A altura da parede
+ * @param {{width: number, height:number}} floorSize: O tamanho do piso. Usado para determinar a
+ * posição certa da parede
+ * @param {string} color: A cor da parede. Por defeito é cinza
+ * @returns {Mesh} O mesh da parede
+ */
+function buildWall(position, width, height, floorSize, color = "grey") {
+  if (!["right", "left", "back", "front"].includes(position)) {
+    throw new Error(
+      "Posição da parede inválida. Tem que ser 'right','left', 'back' ou 'front'"
+    );
+  }
+  // A espessura da parede
+  const WALL_DEPTH = 0.5;
+  let wall;
+  let mesh;
+  const material = new MeshBasicMaterial({ color });
+  switch (position) {
+    case "back":
+      wall = new BoxGeometry(width, height, WALL_DEPTH);
+      mesh = new Mesh(wall, material);
+      mesh.position.y = 2.5;
+      mesh.position.z = floorSize.height / 2;
+      break;
+    case "right":
+      wall = new BoxGeometry(WALL_DEPTH, height, width);
+      mesh = new Mesh(wall, material);
+      mesh.position.y = 2.5;
+      mesh.position.x = floorSize.width / 2;
+      break;
+    case "left":
+      wall = new BoxGeometry(WALL_DEPTH, height, width);
+      mesh = new Mesh(wall, material);
+      mesh.position.y = 2.5;
+      mesh.position.x = floorSize.width / -2;
+      break;
+    case "front":
+      wall = new BoxGeometry(width, height, WALL_DEPTH);
+      mesh = new Mesh(wall, material);
+      mesh.position.y = 2.5;
+      mesh.position.z = floorSize.height / -2;
+      break;
+  }
+  return mesh;
+}
 export default SceneBuilder;

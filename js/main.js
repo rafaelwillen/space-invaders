@@ -16,43 +16,47 @@ function start() {
   // Armazena as três cameras do jogo: frontal, de topo, lateral
   const cameras = [
     CameraBuilder.buildPerspectiveCamera({
-      z: 55,
-      y: 15,
+      z: 75,
+      y: 35,
       rotationX: Math.PI * -0.1,
       name: "front",
     }),
     CameraBuilder.buildPerspectiveCamera({
-      x: 50,
-      y: 10,
+      x: 80,
+      y: 15,
       name: "side",
       rotationX: Math.PI * -0.5,
       rotationY: Math.PI * 0.44,
       rotationZ: Math.PI * 0.5,
     }),
     CameraBuilder.buildPerspectiveCamera({
-      y: 50,
+      y: 80,
       name: "top",
       rotationX: Math.PI * -0.5,
     }),
   ];
+
   // Adiciona cada camera na cena para ser referenciada pelo nome
   cameras.forEach((camera) => {
+    camera.lookAt(scene.position);
     scene.add(camera);
   });
   // Por padrão, seleciona a camera frontal
-  selectedCamera = cameras[0];
+  selectedCamera = cameras[2];
 
-  // Cria o piso
-  const floor = SceneBuilder.createFloor(60, 30);
-  scene.add(floor);
+  // Cria o cenário
+  const scenario = SceneBuilder.createScenario(100, 50);
+  scene.add(scenario);
 
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
+  // TODO: Ajustar a posição da nave do herói
   playerShip3DObject.position.set(0, 1.5, -8);
   playerShip.movePlayer(playerShip3DObject, 20);
   scene.add(playerShip3DObject);
 
   // Cria a nave do vilão
+  // TODO: Ajustar a posição da nave do inimigo
   enemyShip.shipObject.position.set(0, 1.5, 12);
   scene.add(enemyShip.shipObject);
 
@@ -69,7 +73,7 @@ function start() {
 function update() {
   requestAnimationFrame(update);
   // Move a nave inimiga sem nenhum input do utilizador. O limite do movimento é de -20 até 20
-  enemyShip.move(20);
+  // enemyShip.move(20);
   renderer.render(scene, selectedCamera);
 }
 
