@@ -9,7 +9,6 @@ import {
 
 class EnemyShip {
   constructor(ringColor = "#fafafa", sphereColor = "#f00") {
-    this.step = 0;
     // Cria um grupo para juntar várias partes da nave
     this.shipObject = new Group();
     const ring = buildRing(ringColor);
@@ -27,11 +26,65 @@ class EnemyShip {
     // Gira a nave -180º
     this.shipObject.rotateZ(-Math.PI);
     this.shipObject.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    this.shipObject.userData = {
+      speed: 0.1,
+      isMoving: true,
+    };
   }
 
-  move(threshold) {
-    this.step += 0.02;
-    this.shipObject.position.x = (threshold + 1) * Math.sin(this.step);
+  move(destination) {
+    if (!this.shipObject.userData.isMoving) {
+      return;
+    }
+    const { speed } = this.shipObject.userData;
+
+    // Translate
+    const posX = this.shipObject.position.x;
+    const posZ = this.shipObject.position.z;
+    const newPosX = destination.x;
+    const newPosZ = destination.z;
+
+    const multiplierX = posX > newPosX ? -1 : 1;
+    const multiplierZ = posZ > newPosZ ? -1 : 1;
+
+    // Calculate distance
+    const differenceX = Math.abs(posX - newPosX);
+    const differenceZ = Math.abs(posZ - newPosZ);
+    const distance = Math.sqrt(
+      differenceX * differenceX + differenceZ * differenceZ
+    );
+
+    this.shipObject.position.x =
+      posX + speed * (differenceX / distance) * multiplierX;
+    this.shipObject.position.z =
+      posZ + speed * (differenceZ / distance) * multiplierZ;
+
+    const strangeConstant = 3.5;
+
+    const moveCompleteOnX =
+      Math.floor(this.shipObject.position.x) <=
+        Math.floor(newPosX) + strangeConstant &&
+      Math.floor(this.shipObject.position.x) >=
+        Math.floor(newPosX) - strangeConstant;
+    const moveCompleteOnY =
+      Math.floor(this.shipObject.position.z) <=
+        Math.floor(newPosZ) + strangeConstant &&
+      Math.floor(this.shipObject.position.z) >=
+        Math.floor(newPosZ) - strangeConstant;
+
+    if (moveCompleteOnX && moveCompleteOnY) {
+      this.shipObject.position.set(
+        Math.floor(this.shipObject.position.x),
+        this.shipObject.position.y,
+        Math.floor(this.shipObject.position.z)
+      );
+      console.log(this.shipObject.position);
+      this.stopMoving();
+    }
+  }
+
+  stopMoving() {
+    this.shipObject.userData.isMoving = false;
   }
 }
 

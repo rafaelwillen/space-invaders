@@ -68,8 +68,7 @@ function start() {
  */
 function update() {
   requestAnimationFrame(update);
-  // Move a nave inimiga sem nenhum input do utilizador. O limite do movimento é de -20 até 20
-  enemyShip.move(20);
+  enemyShip.move({ x: -20, z: 3 });
   renderer.render(scene, selectedCamera);
 }
 
