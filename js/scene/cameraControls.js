@@ -1,4 +1,4 @@
-export default CameraControls = {
+export default {
   /**
    * Faz com que uma camera perspetiva gire em torno da cena
    * @param {PerspectiveCamera} camera A camera
