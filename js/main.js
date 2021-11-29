@@ -9,6 +9,7 @@ import CameraBuilder from "./scene/cameraBuilder.js";
 import EnemyShip from "./ships/enemyShip.js";
 import PlayerShip from "./ships/playerShip.js";
 import { generateRandomPosition } from "./utilities/movement.js";
+import { getRandomColor } from "./utilities/randomColor.js";
 
 const { scene, renderer } = SceneBuilder.createEssentials();
 let selectedCamera;
