@@ -32,6 +32,7 @@ function start() {
       y: 80,
       name: "top",
       rotationX: Math.PI * -0.5,
+      rotationZ: Math.PI,
     }),
     CameraBuilder.buildPerspectiveCamera({
       z: 75,
@@ -104,9 +105,9 @@ function update() {
   const moveDistance = 15 * delta;
   const playerShipObject = scene.getObjectByName("player");
   if (keyboard.pressed("ArrowLeft"))
-    playerShip.movePlayer(playerShipObject, "left", moveDistance);
-  if (keyboard.pressed("ArrowRight"))
     playerShip.movePlayer(playerShipObject, "right", moveDistance);
+  if (keyboard.pressed("ArrowRight"))
+    playerShip.movePlayer(playerShipObject, "left", moveDistance);
   if (keyboard.pressed("ArrowUp"))
     playerShip.movePlayer(playerShipObject, "front", moveDistance);
   if (keyboard.pressed("ArrowDown"))
