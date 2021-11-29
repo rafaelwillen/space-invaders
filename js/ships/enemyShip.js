@@ -9,7 +9,13 @@ import {
 } from "../library/three.module.js";
 
 class EnemyShip {
-  constructor(ringColor = "#fafafa", sphereColor = "#f00") {
+  /**
+   *
+   * @param {string} ringColor A cor do anel
+   * @param {string} sphereColor A cor da esfera
+   * @param {number} speed A velocidade da nave
+   */
+  constructor(ringColor = "#fafafa", sphereColor = "#f00", speed = 0.1) {
     // Cria um grupo para juntar várias partes da nave
     this.shipObject = new Group();
     const ring = buildRing(ringColor);
@@ -28,7 +34,7 @@ class EnemyShip {
     this.shipObject.rotateZ(-Math.PI);
     this.shipObject.scale.set(scaleFactor, scaleFactor, scaleFactor);
     this.shipObject.userData = {
-      speed: 0.1,
+      speed,
       isMoving: false,
       destination: {
         x: 0,
@@ -43,34 +49,35 @@ class EnemyShip {
    */
   move(destination) {
     const { speed } = this.shipObject.userData;
-    /**
-     * @type {Vector3}
-     */
-    const position = this.shipObject.position;
+    // Define a posição de destino da nave inimiga
     this.setDestination(destination);
 
-    // Translate
     const posX = this.shipObject.position.x;
     const posZ = this.shipObject.position.z;
     const newPosX = destination.x;
     const newPosZ = destination.z;
 
+    // Utiliza os multiplicadores caso sejam necessários valores negativos
     const multiplierX = posX > newPosX ? -1 : 1;
     const multiplierZ = posZ > newPosZ ? -1 : 1;
 
-    // Calculate distance
+    /* 
+      Calcula a distância da posição inicial da nave para o destino com o
+      Teorema de Pitágoras
+    */
     const differenceX = Math.abs(posX - newPosX);
     const differenceZ = Math.abs(posZ - newPosZ);
     const distance = Math.sqrt(
       differenceX * differenceX + differenceZ * differenceZ
     );
 
+    // Define a nova posição da nave
     this.shipObject.position.x =
       posX + speed * (differenceX / distance) * multiplierX;
     this.shipObject.position.z =
       posZ + speed * (differenceZ / distance) * multiplierZ;
 
-    const strangeConstant = 3.5;
+    const strangeConstant = 1.5;
 
     const moveCompleteOnX =
       Math.floor(this.shipObject.position.x) <=
@@ -83,6 +90,10 @@ class EnemyShip {
       Math.floor(this.shipObject.position.z) >=
         Math.floor(newPosZ) - strangeConstant;
 
+    /**
+     * Se a movimentação estiver completa, arredonda o valor aproximado da
+     * nova posição e define a nave para parar de se mover
+     */
     if (moveCompleteOnX && moveCompleteOnY) {
       this.shipObject.position.set(
         Math.floor(this.shipObject.position.x),
@@ -90,22 +101,37 @@ class EnemyShip {
         Math.floor(this.shipObject.position.z)
       );
       this.setIsMoving(false);
-      return;
     }
   }
 
+  /**
+   * Verifica se a nave está a se mexer ou não
+   * @returns {boolean}
+   */
   isMoving() {
     return this.shipObject.userData.isMoving;
   }
 
+  /**
+   * Define se a nave está a se mover ou não
+   * @param {boolean} value
+   */
   setIsMoving(value) {
     this.shipObject.userData.isMoving = value;
   }
 
+  /**
+   * Define um novo destino da nave
+   * @param {{x: number, y:number}} position A nova posição
+   */
   setDestination({ x, z }) {
     this.shipObject.userData.destination = { x, z };
   }
 
+  /**
+   * Retorna o destino da nave
+   * @returns {{x:number, y:number}}
+   */
   getDestination() {
     const { x, z } = this.shipObject.userData.destination;
     return { x, z };

@@ -8,6 +8,7 @@ import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
 import EnemyShip from "./ships/enemyShip.js";
 import PlayerShip from "./ships/playerShip.js";
+import { generateRandomPosition } from "./utilities/movement.js";
 
 const { scene, renderer } = SceneBuilder.createEssentials();
 let selectedCamera;
@@ -89,13 +90,13 @@ function start() {
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
   // TODO: Ajustar a posição da nave do herói
-  playerShip3DObject.position.set(0, 1.5, -8);
+  playerShip3DObject.position.set(0, 1.5, -20);
   playerShip.movePlayer(playerShip3DObject, 20);
   scene.add(playerShip3DObject);
 
   // Cria a nave do vilão
   // TODO: Ajustar a posição da nave do inimigo
-  enemyShip.shipObject.position.set(0, 1.5, 12);
+  enemyShip.shipObject.position.set(0, 1.5, 20);
   scene.add(enemyShip.shipObject);
 
   // Adiciona responsividade na cena
@@ -103,13 +104,6 @@ function start() {
   // Responsável pela mudança de cameras
   window.addEventListener("keydown", cameraChangeEvent);
   update();
-}
-
-function generateRandomPosition() {
-  const scalar = Math.random() * 20 + 10;
-  const newDestination = new Vector3().randomDirection().multiplyScalar(scalar);
-  newDestination.y = 1.5;
-  return newDestination;
 }
 
 /**
@@ -125,10 +119,11 @@ function update() {
 
   let newDestination;
   if (!enemyShip.isMoving()) {
+    // Calcula uma nova posição
     newDestination = generateRandomPosition();
     enemyShip.setIsMoving(true);
-    console.log(newDestination);
   } else {
+    // Continua a se mover na posição definida
     const { x, z } = enemyShip.getDestination();
     newDestination = new Vector3(x, 1.5, z);
   }
