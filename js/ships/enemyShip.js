@@ -5,6 +5,7 @@ import {
   TorusGeometry,
   SphereGeometry,
   CylinderGeometry,
+  Vector3,
 } from "../library/three.module.js";
 
 class EnemyShip {
@@ -28,15 +29,25 @@ class EnemyShip {
     this.shipObject.scale.set(scaleFactor, scaleFactor, scaleFactor);
     this.shipObject.userData = {
       speed: 0.1,
-      isMoving: true,
+      isMoving: false,
+      destination: {
+        x: 0,
+        z: 0,
+      },
     };
   }
 
+  /**
+   * Movimenta a nave para um ponto
+   * @param {Vector3} destination O ponto
+   */
   move(destination) {
-    if (!this.shipObject.userData.isMoving) {
-      return;
-    }
     const { speed } = this.shipObject.userData;
+    /**
+     * @type {Vector3}
+     */
+    const position = this.shipObject.position;
+    this.setDestination(destination);
 
     // Translate
     const posX = this.shipObject.position.x;
@@ -78,13 +89,26 @@ class EnemyShip {
         this.shipObject.position.y,
         Math.floor(this.shipObject.position.z)
       );
-      console.log(this.shipObject.position);
-      this.stopMoving();
+      this.setIsMoving(false);
+      return;
     }
   }
 
-  stopMoving() {
-    this.shipObject.userData.isMoving = false;
+  isMoving() {
+    return this.shipObject.userData.isMoving;
+  }
+
+  setIsMoving(value) {
+    this.shipObject.userData.isMoving = value;
+  }
+
+  setDestination({ x, z }) {
+    this.shipObject.userData.destination = { x, z };
+  }
+
+  getDestination() {
+    const { x, z } = this.shipObject.userData.destination;
+    return { x, z };
   }
 }
 

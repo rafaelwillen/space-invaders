@@ -80,7 +80,7 @@ function start() {
     scene.add(camera);
   });
   // Por padrão, seleciona a camera frontal
-  selectedCamera = cameras[2];
+  selectedCamera = cameras[0];
 
   // Cria o cenário
   const scenario = SceneBuilder.createScenario(100, 50);
@@ -105,12 +105,17 @@ function start() {
   update();
 }
 
+function generateRandomPosition() {
+  const scalar = Math.random() * 20 + 10;
+  const newDestination = new Vector3().randomDirection().multiplyScalar(scalar);
+  newDestination.y = 1.5;
+  return newDestination;
+}
+
 /**
  * Responsável por renderizar a cena e os seus objetos. Chamada a cada frame
  */
 function update() {
-  requestAnimationFrame(update);
-  enemyShip.move({ x: -20, z: 3 });
   if (selectedCamera.name === "dynamic360") {
     CameraControls.rotateAroundScene(selectedCamera, scene.position);
   } else if (selectedCamera.name === "dynamicBullet") {
@@ -118,7 +123,19 @@ function update() {
     CameraControls.followObject(selectedCamera, enemyShip.shipObject, 10);
   }
 
+  let newDestination;
+  if (!enemyShip.isMoving()) {
+    newDestination = generateRandomPosition();
+    enemyShip.setIsMoving(true);
+    console.log(newDestination);
+  } else {
+    const { x, z } = enemyShip.getDestination();
+    newDestination = new Vector3(x, 1.5, z);
+  }
+  enemyShip.move(newDestination);
+
   renderer.render(scene, selectedCamera);
+  requestAnimationFrame(update);
 }
 
 start();
