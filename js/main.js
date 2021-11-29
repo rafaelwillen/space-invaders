@@ -10,9 +10,13 @@ import CameraControls from "./scene/cameraControls.js";
 import EnemyShip from "./ships/enemyShip.js";
 import PlayerShip from "./ships/playerShip.js";
 import { generateRandomPosition } from "./utilities/movement.js";
+import KeyboardState from "./utilities/keyboardState.js";
 import { getRandomColor } from "./utilities/randomColor.js";
 
 const { scene, renderer } = SceneBuilder.createEssentials();
+const clock = new Clock();
+const keyboard = new KeyboardState();
+
 let selectedCamera;
 
 /**
