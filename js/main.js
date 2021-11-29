@@ -46,7 +46,10 @@ const CameraControls = {
   },
 };
 
-const enemyShip = new EnemyShip();
+/**
+ * @type {EnemyShip[]}
+ */
+const enemiesShips = [];
 const playerShip = new PlayerShip();
 
 /**
@@ -90,15 +93,25 @@ function start() {
 
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
-  // TODO: Ajustar a posição da nave do herói
   playerShip3DObject.position.set(0, 1.5, -20);
   playerShip.movePlayer(playerShip3DObject, 20);
   scene.add(playerShip3DObject);
 
-  // Cria a nave do vilão
-  // TODO: Ajustar a posição da nave do inimigo
-  enemyShip.shipObject.position.set(0, 1.5, 20);
-  scene.add(enemyShip.shipObject);
+  // Cria as naves dos vilões
+  for (let i = 0; i < 8; i++) {
+    const xPosition = (100 - 22 * (i + 1)) / 2;
+    const zPosition = 20;
+    enemiesShips.push(
+      new EnemyShip(getRandomColor(), getRandomColor(), 0.1, {
+        x: xPosition,
+        z: zPosition,
+      })
+    );
+  }
+  // Adiciona as naves na cena
+  enemiesShips.forEach((enemyShip) => {
+    scene.add(enemyShip.shipObject);
+  });
 
   // Adiciona responsividade na cena
   window.addEventListener("resize", windowResizeEvent);
@@ -118,17 +131,19 @@ function update() {
     CameraControls.followObject(selectedCamera, enemyShip.shipObject, 10);
   }
 
-  let newDestination;
-  if (!enemyShip.isMoving()) {
-    // Calcula uma nova posição
-    newDestination = generateRandomPosition();
-    enemyShip.setIsMoving(true);
-  } else {
-    // Continua a se mover na posição definida
-    const { x, z } = enemyShip.getDestination();
-    newDestination = new Vector3(x, 1.5, z);
-  }
-  enemyShip.move(newDestination);
+  enemiesShips.forEach((enemyShip) => {
+    let newDestination;
+    if (!enemyShip.isMoving()) {
+      // Calcula uma nova posição
+      newDestination = generateRandomPosition();
+      enemyShip.setIsMoving(true);
+    } else {
+      // Continua a se mover na posição definida
+      const { x, z } = enemyShip.getDestination();
+      newDestination = new Vector3(x, 1.5, z);
+    }
+    enemyShip.move(newDestination);
+  });
 
   renderer.render(scene, selectedCamera);
   requestAnimationFrame(update);

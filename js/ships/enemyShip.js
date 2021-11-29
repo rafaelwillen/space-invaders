@@ -14,8 +14,14 @@ class EnemyShip {
    * @param {string} ringColor A cor do anel
    * @param {string} sphereColor A cor da esfera
    * @param {number} speed A velocidade da nave
+   * @param {{x:number, y:number, z:number}} position A posição da nave
    */
-  constructor(ringColor = "#fafafa", sphereColor = "#f00", speed = 0.1) {
+  constructor(
+    ringColor = "#fafafa",
+    sphereColor = "#f00",
+    speed = 0.1,
+    position = { x: 0, y: 1.5, z: 0 }
+  ) {
     // Cria um grupo para juntar várias partes da nave
     this.shipObject = new Group();
     const ring = buildRing(ringColor);
@@ -33,6 +39,8 @@ class EnemyShip {
     // Gira a nave -180º
     this.shipObject.rotateZ(-Math.PI);
     this.shipObject.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    position.y = position.y ? position.y : 1.5;
+    this.shipObject.position.set(position.x, position.y, position.z);
     this.shipObject.userData = {
       speed,
       isMoving: false,
