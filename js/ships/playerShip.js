@@ -7,11 +7,10 @@ import {
   Mesh,
   MeshBasicMaterial,
   Math,
+  Object3D,
 } from "../library/three.module.js";
 
 class PlayerShip {
-  speedPlayer = 0.56;
-
   build() {
     // O objeto nave
     const shipGroup = new Group();
@@ -47,19 +46,27 @@ class PlayerShip {
     return shipGroup;
   }
 
-  movePlayer(player, threshold) {
-    addEventListener("keydown", (event) => {
-      switch (event.key) {
-        case "ArrowLeft":
-          if (player.position.x >= threshold * -1)
-            player.position.x -= this.speedPlayer;
-          break;
-        case "ArrowRight":
-          if (player.position.x <= threshold)
-            player.position.x += this.speedPlayer;
-          break;
-      }
-    });
+  /**
+   * Move o jogador
+   * @param {Object3D} player A nave do jogador
+   * @param {"right" | "left"|"front"|"back"} movement A direção do movimento
+   * @param {number} speed A velocidade
+   */
+  movePlayer(player, movement, speed) {
+    switch (movement) {
+      case "right":
+        player.translateX(speed);
+        break;
+      case "left":
+        player.translateX(-speed);
+        break;
+      case "front":
+        player.translateZ(speed);
+        break;
+      case "back":
+        player.translateZ(-speed);
+        break;
+    }
   }
 }
 

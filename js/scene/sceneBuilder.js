@@ -33,7 +33,7 @@ class SceneBuilder {
 
   static createEssentials() {
     const scene = new Scene();
-    const renderer = new WebGLRenderer();
+    const renderer = new WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, innerHeight);
     document.body.appendChild(renderer.domElement);
     return { scene, renderer };

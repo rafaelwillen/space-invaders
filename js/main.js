@@ -1,8 +1,4 @@
-import {
-  Object3D,
-  PerspectiveCamera,
-  Vector3,
-} from "./library/three.module.js";
+import { Clock, Vector3 } from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -67,7 +63,7 @@ function start() {
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
   playerShip3DObject.position.set(0, 1.5, -20);
-  playerShip.movePlayer(playerShip3DObject, 20);
+  playerShip3DObject.name = "player";
   scene.add(playerShip3DObject);
 
   // Cria as naves dos vilões
@@ -97,13 +93,37 @@ function start() {
  * Responsável por renderizar a cena e os seus objetos. Chamada a cada frame
  */
 function update() {
+  const delta = clock.getDelta();
   if (selectedCamera.name === "dynamic360") {
     CameraControls.rotateAroundScene(selectedCamera, scene.position);
   } else if (selectedCamera.name === "dynamicBullet") {
     // TODO: Mudar isto para ser a bala
-    CameraControls.followObject(selectedCamera, enemyShip.shipObject, 10);
+    // CameraControls.followObject(selectedCamera, enemyShip.shipObject, 10);
   }
+  // Move 0.1 pixeis por segundo
+  const moveDistance = 15 * delta;
+  const playerShipObject = scene.getObjectByName("player");
+  if (keyboard.pressed("ArrowLeft"))
+    playerShip.movePlayer(playerShipObject, "left", moveDistance);
+  if (keyboard.pressed("ArrowRight"))
+    playerShip.movePlayer(playerShipObject, "right", moveDistance);
+  if (keyboard.pressed("ArrowUp"))
+    playerShip.movePlayer(playerShipObject, "front", moveDistance);
+  if (keyboard.pressed("ArrowDown"))
+    playerShip.movePlayer(playerShipObject, "back", moveDistance);
 
+  updateEnemiesShips();
+
+  renderer.render(scene, selectedCamera);
+  requestAnimationFrame(update);
+}
+
+start();
+
+/**
+ * Atualiza as posições das naves inimigas
+ */
+function updateEnemiesShips() {
   enemiesShips.forEach((enemyShip) => {
     let newDestination;
     if (!enemyShip.isMoving()) {
@@ -117,12 +137,7 @@ function update() {
     }
     enemyShip.move(newDestination);
   });
-
-  renderer.render(scene, selectedCamera);
-  requestAnimationFrame(update);
 }
-
-start();
 
 /**
  * Adiciona responsividade na cena. Deve ser chamada em quando o evento 'resize' é disparado
