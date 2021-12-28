@@ -1,3 +1,4 @@
+import Bullet from "../components/Bullet.js";
 import {
   BoxGeometry,
   ConeGeometry,
@@ -8,6 +9,7 @@ import {
   MeshBasicMaterial,
   Math,
   Object3D,
+  Vector3,
 } from "../library/three.module.js";
 
 class PlayerShip {
@@ -68,6 +70,15 @@ class PlayerShip {
         break;
     }
   }
+
+  shootPlayer(scene) {
+    const bullet = new Bullet();
+    scene.add(bullet);
+    setTimeout(() => {
+      scene.remove(b);
+    }, 2000);
+
+  }
 }
 
 /**
@@ -82,6 +93,7 @@ function buildBodyRect(color = "red") {
   const mesh = new Mesh(geometry, material);
   return mesh;
 }
+
 
 /**
  * Constrói a cabine da nave. Possui a geometria de um cubo. Transformações
@@ -197,5 +209,21 @@ function buildShearTransformation({
   shearMatrix.set(1, syx, szx, 0, sxy, 1, szy, 0, sxz, syz, 1, 0, 0, 0, 0, 1);
   return shearMatrix;
 }
+
+/**
+ * Define a direção da bala
+ * @param {Vector3} targerVector
+ * @returns void
+ */
+function getShootDir(targetVec) {
+  var vector = targetVec; // is te type vector 3
+  targetVec.set(0, 0, 1);
+  vector.unproject(camera);
+  var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
+  targetVec.copy(ray.direction);
+}
+
+
+
 
 export default PlayerShip;

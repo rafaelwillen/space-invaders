@@ -104,6 +104,7 @@ function update() {
   // Move 0.1 pixeis por segundo
   const moveDistance = 15 * delta;
   const playerShipObject = scene.getObjectByName("player");
+
   if (keyboard.pressed("ArrowLeft"))
     playerShip.movePlayer(playerShipObject, "right", moveDistance);
   if (keyboard.pressed("ArrowRight"))
@@ -112,6 +113,8 @@ function update() {
     playerShip.movePlayer(playerShipObject, "front", moveDistance);
   if (keyboard.pressed("ArrowDown"))
     playerShip.movePlayer(playerShipObject, "back", moveDistance);
+  if (keyboard.pressed(" "))
+    playerShip.shootPlayer(scene);
 
   updateEnemiesShips();
 
