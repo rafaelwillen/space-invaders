@@ -12,7 +12,6 @@ import { getRandomColor } from "./utilities/randomColor.js";
 const { scene, renderer } = SceneBuilder.createEssentials();
 const clock = new Clock();
 const keyboard = new KeyboardState();
-
 let selectedCamera;
 
 /**
@@ -52,6 +51,7 @@ function start() {
 
   // Adiciona cada camera na cena para ser referenciada pelo nome
   cameras.forEach((camera) => {
+    camera.lookAt(scene.position);
     scene.add(camera);
   });
   // Por padrão, seleciona a camera frontal
@@ -95,23 +95,16 @@ function start() {
  */
 function update() {
   const delta = clock.getDelta();
+  // Move 0.1 pixeis por segundo
+  const moveDistance = 15 * delta;
+  const playerShipObject = scene.getObjectByName("player");
   if (selectedCamera.name === "dynamic360") {
     CameraControls.rotateAroundScene(selectedCamera, scene.position);
   } else if (selectedCamera.name === "dynamicBullet") {
     // TODO: Mudar isto para ser a bala
-    // CameraControls.followObject(selectedCamera, enemyShip.shipObject, 10);
+    CameraControls.followObject(selectedCamera, playerShipObject, 5);
   }
-  // Move 0.1 pixeis por segundo
-  const moveDistance = 15 * delta;
-  const playerShipObject = scene.getObjectByName("player");
-  if (keyboard.pressed("ArrowLeft"))
-    playerShip.movePlayer(playerShipObject, "right", moveDistance);
-  if (keyboard.pressed("ArrowRight"))
-    playerShip.movePlayer(playerShipObject, "left", moveDistance);
-  if (keyboard.pressed("ArrowUp"))
-    playerShip.movePlayer(playerShipObject, "front", moveDistance);
-  if (keyboard.pressed("ArrowDown"))
-    playerShip.movePlayer(playerShipObject, "back", moveDistance);
+  movePlayerShip(playerShipObject, moveDistance);
 
   updateEnemiesShips();
 
@@ -125,7 +118,7 @@ start();
  * Atualiza as posições das naves inimigas
  */
 function updateEnemiesShips() {
-  enemiesShips.forEach((enemyShip) => {
+  enemiesShips.forEach((enemyShip, index) => {
     let newDestination;
     if (!enemyShip.isMoving()) {
       // Calcula uma nova posição
@@ -138,6 +131,27 @@ function updateEnemiesShips() {
     }
     enemyShip.move(newDestination);
   });
+}
+
+function movePlayerShip(player, moveDistance) {
+  const xConstraint = 45;
+  // Move 0.1 pixeis por segundo
+  if (keyboard.pressed("ArrowLeft")) {
+    if (player.position.x <= xConstraint)
+      playerShip.movePlayer(player, "right", moveDistance);
+  }
+  if (keyboard.pressed("ArrowRight")) {
+    if (player.position.x >= -xConstraint)
+      playerShip.movePlayer(player, "left", moveDistance);
+  }
+  if (keyboard.pressed("ArrowUp")) {
+    if (player.position.z <= -5)
+      playerShip.movePlayer(player, "front", moveDistance);
+  }
+  if (keyboard.pressed("ArrowDown")) {
+    if (player.position.z >= -21)
+      playerShip.movePlayer(player, "back", moveDistance);
+  }
 }
 
 /**

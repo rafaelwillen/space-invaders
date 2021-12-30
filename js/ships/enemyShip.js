@@ -6,6 +6,7 @@ import {
   SphereGeometry,
   CylinderGeometry,
   Vector3,
+  Object3D,
 } from "../library/three.module.js";
 
 class EnemyShip {
@@ -41,9 +42,14 @@ class EnemyShip {
     this.shipObject.scale.set(scaleFactor, scaleFactor, scaleFactor);
     position.y = position.y ? position.y : 1.5;
     this.shipObject.position.set(position.x, position.y, position.z);
+    const boxSize = buildBoundingBox(this.shipObject);
     this.shipObject.userData = {
       speed,
       isMoving: false,
+      boundingBox: {
+        max: { x: boxSize.x / 2, y: boxSize.y / 2, z: boxSize.z / 2 },
+        min: { x: -boxSize.x / 2, y: -boxSize.y / 2, z: -boxSize.z / 2 },
+      },
       destination: {
         x: 0,
         z: 0,
@@ -144,6 +150,48 @@ class EnemyShip {
     const { x, z } = this.shipObject.userData.destination;
     return { x, z };
   }
+
+  /**
+   * Calcula a posição da bounding box
+   * @returns {{max:{x:number, y:number,z:number}, min:{x:number, y:number,z:number}}}
+   */
+  computeBoundingBox() {
+    /**
+     * @type {Vector3}
+     */
+    const shipPosition = this.shipObject.position;
+    const boundingBoxSize = buildBoundingBox(this.shipObject);
+    const max = {
+      x: boundingBoxSize.x / 2 + shipPosition.x,
+      y: boundingBoxSize.y / 2 + shipPosition.y,
+      z: boundingBoxSize.z / 2 + shipPosition.z,
+    };
+    const min = {
+      x: boundingBoxSize.x / -2 + shipPosition.x,
+      y: boundingBoxSize.y / -2 + shipPosition.y,
+      z: boundingBoxSize.z / -2 + shipPosition.z,
+    };
+
+    return { max, min };
+  }
+
+  /**
+   * Verifica se o objeto colidiu com outro
+   * @param {Object3D} otherObject
+   * @returns {boolean}
+   */
+  collided(otherObject) {
+    const boundingBoxA = this.shipObject.userData.boundingBox;
+    const boundingBoxB = otherObject.userData.boundingBox;
+    return (
+      boundingBoxA.min.x <= boundingBoxB.max.x &&
+      boundingBoxA.max.x >= boundingBoxB.min.x &&
+      boundingBoxA.min.y <= boundingBoxB.max.y &&
+      boundingBoxA.max.y >= boundingBoxB.min.y &&
+      boundingBoxA.min.z <= boundingBoxB.max.z &&
+      boundingBoxA.max.z >= boundingBoxB.min.z
+    );
+  }
 }
 
 /**
@@ -157,6 +205,7 @@ function buildRing(color = "#fafafa") {
   const ringMaterial = new MeshBasicMaterial({ color });
   const ring = new Mesh(ringGeometry, ringMaterial);
   ring.scale.set(ringScale, ringScale, ringScale);
+  ring.name = "ring";
   return ring;
 }
 
@@ -170,6 +219,7 @@ function buildSphere(color = "#f00") {
   const sphereMaterial = new MeshBasicMaterial({ color });
   const sphere = new Mesh(sphereGeometry, sphereMaterial);
   sphere.scale.set(1, 1, 0.5);
+  sphere.name = "body";
   return sphere;
 }
 
@@ -183,6 +233,7 @@ function buildTurret(color = "#888") {
   const turretMaterial = new MeshBasicMaterial({ color });
   const turret = new Mesh(turretGeometry, turretMaterial);
   turret.translateZ(-3);
+  turret.name = "turret";
   return turret;
 }
 
@@ -202,5 +253,25 @@ function buildBarrel(color = "#ff0") {
   barrel.rotateZ(-Math.PI);
   barrel.scale.set(scaleFactor, scaleFactor, scaleFactor);
   return barrel;
+}
+
+/**
+ * Constrói a bounding box da nave
+ * @param {Group} ship
+ */
+function buildBoundingBox(ship) {
+  const shipRing = ship.getObjectByName("ring");
+  const ringRadius = shipRing.geometry.parameters.radius;
+  const tubeRadius = shipRing.geometry.parameters.tube;
+  const shipXSize = (ringRadius + tubeRadius) * shipRing.scale.x;
+  const shipZSize = ringRadius * tubeRadius * shipRing.scale.z;
+  const shipTurret = ship.getObjectByName("turret");
+  const turretRadius =
+    shipTurret.geometry.parameters.radius + shipTurret.position.z * -1;
+
+  const shipBody = ship.getObjectByName("body");
+  const bodyRadius = shipBody.geometry.parameters.radius;
+
+  return { x: shipXSize * 2, y: turretRadius + bodyRadius, z: shipZSize * 2 };
 }
 export default EnemyShip;

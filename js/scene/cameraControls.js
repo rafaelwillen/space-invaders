@@ -25,7 +25,7 @@ export default {
     const { x, y, z } = object.position;
     if (distanceToObject < 0)
       throw new Error("Distância não pode ser negativa");
-    camera.position.set(x, y, z + distanceToObject);
+    camera.position.set(x, y, z - distanceToObject);
     camera.lookAt(object.position);
   },
 };
