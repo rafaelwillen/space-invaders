@@ -104,7 +104,18 @@ function update() {
     // TODO: Mudar isto para ser a bala
     CameraControls.followObject(selectedCamera, playerShipObject, 5);
   }
-  movePlayerShip(playerShipObject, moveDistance);
+  // Move 0.1 pixeis por segundo
+
+  if (keyboard.pressed("ArrowLeft"))
+    playerShip.movePlayer(playerShipObject, "right", moveDistance);
+  if (keyboard.pressed("ArrowRight"))
+    playerShip.movePlayer(playerShipObject, "left", moveDistance);
+  if (keyboard.pressed("ArrowUp"))
+    playerShip.movePlayer(playerShipObject, "front", moveDistance);
+  if (keyboard.pressed("ArrowDown"))
+    playerShip.movePlayer(playerShipObject, "back", moveDistance);
+  if (keyboard.pressed(" "))
+    playerShip.shootPlayer(scene);
 
   updateEnemiesShips();
 
