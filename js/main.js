@@ -61,8 +61,8 @@ function start() {
   scene.add(scenario);
 
   scene.add(directionalLight);
-  document.addEventListener("keypress", onLightVisibilityToggle);
-  const dLightHelper = new DirectionalLightHelper(directionalLight, 5);
+  // const dLightHelper = new DirectionalLightHelper(directionalLight, 5);
+  // scene.add(dLightHelper);
 
   const lightHeight = 30;
   const topLeftLightSourcePosition = new Vector3(110, lightHeight, 80);
@@ -77,13 +77,14 @@ function start() {
     LightBuilder.buildSpotLight(bottomRightLightSourcePosition)
   );
 
-  scene.add(dLightHelper);
   spotLights.forEach((spotLight) => {
     spotLight.visible = false;
     spotLight.target = scene;
-    const sLightHelper = new SpotLightHelper(spotLight);
-    scene.add(spotLight, sLightHelper);
+    // const sLightHelper = new SpotLightHelper(spotLight);
+    scene.add(spotLight);
+    // scene.add(sLightHelper)
   });
+  document.addEventListener("keypress", onLightVisibilityToggle);
 
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
