@@ -2,7 +2,6 @@ import { Clock, Vector3 } from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
-import CameraControls from "./scene/cameraControls.js";
 import EnemyShip from "./ships/enemyShip.js";
 import PlayerShip from "./ships/playerShip.js";
 import { generateRandomPosition } from "./utilities/movement.js";
@@ -24,28 +23,18 @@ const playerShip = new PlayerShip();
  * Cria todos os objetos da cena. Chamado apenas uma vez
  */
 function start() {
-  // Armazena as três cameras do jogo: frontal, de topo, lateral
+  const cameraDistanceToScene = 60;
+  // Armazena as duas cameras do jogo: perspetiva e ortogonal
   const cameras = [
-    //TODO: Mudar para ortogonal
     CameraBuilder.buildPerspectiveCamera({
-      y: 80,
-      name: "top",
-      rotationX: Math.PI * -0.5,
-      rotationZ: Math.PI,
+      y: cameraDistanceToScene,
+      z: -cameraDistanceToScene,
+      name: "perspective",
     }),
-    CameraBuilder.buildPerspectiveCamera({
-      z: 75,
-      y: 35,
-      rotationX: Math.PI * -0.1,
-      name: "dynamic360",
-    }),
-    CameraBuilder.buildPerspectiveCamera({
-      x: 0,
-      y: 15,
-      name: "dynamicBullet",
-      rotationX: Math.PI * -0.5,
-      rotationY: Math.PI * 0.44,
-      rotationZ: Math.PI * 0.5,
+    CameraBuilder.buildOrthographicCamera({
+      y: cameraDistanceToScene,
+      z: -cameraDistanceToScene,
+      name: "orthographic",
     }),
   ];
 
@@ -54,7 +43,7 @@ function start() {
     camera.lookAt(scene.position);
     scene.add(camera);
   });
-  // Por padrão, seleciona a camera frontal
+  // Por padrão, seleciona a camera de topo
   selectedCamera = cameras[0];
 
   // Cria o cenário
@@ -101,13 +90,6 @@ function update() {
   // Move 0.1 pixeis por segundo
   const moveDistance = 15 * delta;
   const playerShipObject = scene.getObjectByName("player");
-  if (selectedCamera.name === "dynamic360") {
-    CameraControls.rotateAroundScene(selectedCamera, scene.position);
-  } else if (selectedCamera.name === "dynamicBullet") {
-    // TODO: Mudar isto para ser a bala
-    CameraControls.followObject(selectedCamera, playerShipObject, 5);
-  }
-  // Move 0.1 pixeis por segundo
 
   if (keyboard.pressed("ArrowLeft"))
     playerShip.movePlayer(playerShipObject, "right", moveDistance);
@@ -156,21 +138,17 @@ function windowResizeEvent() {
 }
 
 /**
- * Permite a mudança da camera selecionada. Suporta três cameras (frontal, lateral, topo). Deve ser chamada em quando o evento 'keydown' é disparado
+ * Permite a mudança da camera selecionada
  */
 function cameraChangeEvent(e) {
-  // Tecla 1 -> Camera Dinâmica 360º
-  // Tecla 2 -> Camera Dinâmica da bala
-  // Tecla 3 -> Camera de topo
+  // Tecla 5 -> Camera Fixa Perspetiva
+  // Tecla 6 -> Camera Fixa Ortogonal
   switch (e.key) {
-    case "1":
-      selectedCamera = scene.getObjectByName("top");
+    case "5":
+      selectedCamera = scene.getObjectByName("perspective");
       break;
-    case "2":
-      selectedCamera = scene.getObjectByName("dynamic360");
-      break;
-    case "3":
-      selectedCamera = scene.getObjectByName("dynamicBullet");
+    case "6":
+      selectedCamera = scene.getObjectByName("orthographic");
       break;
   }
 }
