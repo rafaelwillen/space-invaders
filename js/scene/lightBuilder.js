@@ -6,7 +6,7 @@ import {
   Vector3,
 } from "../library/three.module.js";
 
-const SHADOW_MAP_SIZE = 100;
+const SHADOW_MAP_SIZE = 1000;
 
 class LightBuilder {
   static buildDirectionalLight() {

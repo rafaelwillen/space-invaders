@@ -37,6 +37,7 @@ class SceneBuilder {
     const scene = new Scene();
     const renderer = new WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, innerHeight);
+    renderer.shadowMap.enabled = true;
     document.body.appendChild(renderer.domElement);
     return { scene, renderer };
   }
