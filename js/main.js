@@ -12,6 +12,7 @@ const { scene, renderer } = SceneBuilder.createEssentials();
 const clock = new Clock();
 const keyboard = new KeyboardState();
 let selectedCamera;
+let bullets = [];
 
 /**
  * @type {EnemyShip[]}
@@ -91,6 +92,19 @@ function update() {
   const moveDistance = 15 * delta;
   const playerShipObject = scene.getObjectByName("player");
 
+  for (let index = 0; index < bullets.length; index++) {
+    if (bullets[index] === undefined)
+      continue;
+    if (bullets[index].alive == false) {
+      bullets.splice(index, 1);
+      continue;
+    }
+
+    bullets[index].position.add(bullets[index].velocity);
+
+
+  }
+
   if (keyboard.pressed("ArrowLeft"))
     playerShip.movePlayer(playerShipObject, "right", moveDistance);
   if (keyboard.pressed("ArrowRight"))
@@ -99,7 +113,12 @@ function update() {
     playerShip.movePlayer(playerShipObject, "front", moveDistance);
   if (keyboard.pressed("ArrowDown"))
     playerShip.movePlayer(playerShipObject, "back", moveDistance);
-  if (keyboard.pressed(" ")) playerShip.shootPlayer(scene);
+  if (keyboard.pressed(" ") && playerShip.canShot <= 0)
+    playerShip.shootPlayer(scene, bullets);
+  else {
+    if (playerShip.canShot > 0)
+      playerShip.canShot -= 10;
+  }
 
   updateEnemiesShips();
 
@@ -113,6 +132,7 @@ start();
  * Atualiza as posições das naves inimigas
  */
 function updateEnemiesShips() {
+
   enemiesShips.forEach((enemyShip) => {
     let newDestination;
     if (!enemyShip.isMoving()) {
@@ -126,6 +146,20 @@ function updateEnemiesShips() {
     }
     enemyShip.move(newDestination);
   });
+
+  let index = Math.floor(Math.random() * 7);
+  if (enemiesShips[index].canShot) {
+    if (enemiesShips[index].canShot <= 0) {
+      setTimeout(()=> {
+        enemiesShips[index].shootEnimy(scene, bullets);
+      },5000)
+    }
+    else
+      enemiesShips[index].canShot -= 5;
+  } else {
+    enemiesShips[index].shootEnimy(scene, bullets);
+
+  }
 }
 
 /**

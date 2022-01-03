@@ -8,6 +8,7 @@ import {
   Vector3,
   Object3D,
 } from "../library/three.module.js";
+import Bullet from "../components/Bullet.js";
 
 class EnemyShip {
   /**
@@ -25,6 +26,7 @@ class EnemyShip {
   ) {
     // Cria um grupo para juntar várias partes da nave
     this.shipObject = new Group();
+    this.canShot = 0;
     const ring = buildRing(ringColor);
     const sphere = buildSphere(sphereColor);
     const turret = buildTurret();
@@ -192,6 +194,26 @@ class EnemyShip {
       boundingBoxA.max.z >= boundingBoxB.min.z
     );
   }
+
+  shootEnimy(scene,bullets) {
+    const bullet = new Bullet();
+    bullet.position.set(
+      this.shipObject.position.x,
+      this.shipObject.position.y,
+      this.shipObject.position.z
+    )
+    bullet.velocity = new Vector3(0,0,-0.5)
+    setTimeout(() => {
+      bullet.alive = false;
+      scene.remove(bullet);
+    }, 2000);
+
+      this.canShot = 100;
+      bullets.push(bullet);
+      scene.add(bullet);
+    
+  }
+
 }
 
 /**

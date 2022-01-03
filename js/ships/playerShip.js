@@ -12,10 +12,13 @@ import {
   Vector3,
 } from "../library/three.module.js";
 
+const shipGroup = new Group();
 class PlayerShip {
+  constructor(){
+    this.canShot = 0;
+  }
   build() {
     // O objeto nave
-    const shipGroup = new Group();
     // A carcaça da nave
     const hull = new Group();
     // Retângulo principal
@@ -71,13 +74,24 @@ class PlayerShip {
     }
   }
 
-  shootPlayer(scene) {
+  shootPlayer(scene,bullets) {
     const bullet = new Bullet();
-    scene.add(bullet);
+    bullet.position.set(
+      shipGroup.position.x,
+      shipGroup.position.y,
+      shipGroup.position.z
+    )
+    bullet.velocity = new Vector3(0,0,0.5);
+
     setTimeout(() => {
-      scene.remove(b);
+      bullet.alive = false;
+      scene.remove(bullet);
     }, 2000);
 
+      this.canShot = 100;
+      bullets.push(bullet);
+      scene.add(bullet);
+    
   }
 }
 
