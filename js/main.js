@@ -67,8 +67,11 @@ function start() {
   playerShip3DObject.name = "player";
   scene.add(playerShip3DObject);
 
+  const numberOfEnemyShips = 7;
+
   // Cria as naves dos vilões
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < numberOfEnemyShips; i++) {
+    // Gera posições das naves
     const xPosition = (100 - 22 * (i + 1)) / 2;
     const zPosition = 20;
     enemiesShips.push(
@@ -114,8 +117,7 @@ function update() {
     playerShip.movePlayer(playerShipObject, "front", moveDistance);
   if (keyboard.pressed("ArrowDown"))
     playerShip.movePlayer(playerShipObject, "back", moveDistance);
-  if (keyboard.pressed(" "))
-    playerShip.shootPlayer(scene);
+  if (keyboard.pressed(" ")) playerShip.shootPlayer(scene);
 
   updateEnemiesShips();
 
@@ -129,7 +131,7 @@ start();
  * Atualiza as posições das naves inimigas
  */
 function updateEnemiesShips() {
-  enemiesShips.forEach((enemyShip, index) => {
+  enemiesShips.forEach((enemyShip) => {
     let newDestination;
     if (!enemyShip.isMoving()) {
       // Calcula uma nova posição
@@ -142,27 +144,6 @@ function updateEnemiesShips() {
     }
     enemyShip.move(newDestination);
   });
-}
-
-function movePlayerShip(player, moveDistance) {
-  const xConstraint = 45;
-  // Move 0.1 pixeis por segundo
-  if (keyboard.pressed("ArrowLeft")) {
-    if (player.position.x <= xConstraint)
-      playerShip.movePlayer(player, "right", moveDistance);
-  }
-  if (keyboard.pressed("ArrowRight")) {
-    if (player.position.x >= -xConstraint)
-      playerShip.movePlayer(player, "left", moveDistance);
-  }
-  if (keyboard.pressed("ArrowUp")) {
-    if (player.position.z <= -5)
-      playerShip.movePlayer(player, "front", moveDistance);
-  }
-  if (keyboard.pressed("ArrowDown")) {
-    if (player.position.z >= -21)
-      playerShip.movePlayer(player, "back", moveDistance);
-  }
 }
 
 /**
