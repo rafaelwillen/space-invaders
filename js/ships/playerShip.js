@@ -10,11 +10,13 @@ import {
   Math,
   Object3D,
   Vector3,
+  MeshLambertMaterial,
+  MeshPhongMaterial,
 } from "../library/three.module.js";
 
 const shipGroup = new Group();
 class PlayerShip {
-  constructor(){
+  constructor() {
     this.canShot = 0;
   }
   build() {
@@ -74,24 +76,23 @@ class PlayerShip {
     }
   }
 
-  shootPlayer(scene,bullets) {
+  shootPlayer(scene, bullets) {
     const bullet = new Bullet();
     bullet.position.set(
       shipGroup.position.x,
       shipGroup.position.y,
       shipGroup.position.z
-    )
-    bullet.velocity = new Vector3(0,0,0.5);
+    );
+    bullet.velocity = new Vector3(0, 0, 0.5);
 
     setTimeout(() => {
       bullet.alive = false;
       scene.remove(bullet);
     }, 2000);
 
-      this.canShot = 100;
-      bullets.push(bullet);
-      scene.add(bullet);
-    
+    this.canShot = 100;
+    bullets.push(bullet);
+    scene.add(bullet);
   }
 }
 
@@ -103,11 +104,12 @@ class PlayerShip {
  */
 function buildBodyRect(color = "red") {
   const geometry = new BoxGeometry(2, 1.5, 7);
-  const material = new MeshBasicMaterial({ color });
+  const material = new MeshLambertMaterial({ color });
   const mesh = new Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
-
 
 /**
  * Constrói a cabine da nave. Possui a geometria de um cubo. Transformações
@@ -118,10 +120,12 @@ function buildBodyRect(color = "red") {
 function buildCockpit(color = "yellow") {
   const geometry = new BoxGeometry(1.8, 1.4, 2);
   const shearMatrix = buildShearTransformation({ syz: -1 });
-  const material = new MeshBasicMaterial({ color });
+  const material = new MeshPhongMaterial({ color });
   const mesh = new Mesh(geometry, material);
   mesh.geometry.applyMatrix4(shearMatrix);
   mesh.scale.set(1, 1, 3.5);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -135,12 +139,14 @@ function buildCockpit(color = "yellow") {
  */
 function buildWing(isLeft = true, color = "blue") {
   const geometry = new ConeGeometry(2.6, 10, 3);
-  const material = new MeshBasicMaterial({ color });
+  const material = new MeshLambertMaterial({ color });
   const mesh = new Mesh(geometry, material);
   mesh.scale.set(0.8, 0.8, 0.2);
   mesh.position.set(isLeft ? -2.6 : 2.6, 0, 0.5);
   const zAngle = isLeft ? Math.degToRad(140) : Math.degToRad(220);
   mesh.rotation.set(Math.degToRad(-90), 0, zAngle);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -161,11 +167,13 @@ function buildThruster(isLeft = true, color = "grey", distanceToHull = 0.8) {
     ? thrustersDistanceToMainBody * -1
     : thrustersDistanceToMainBody;
   const geometry = new CylinderGeometry(1, 1, 3, 20);
-  const material = new MeshBasicMaterial({ color });
+  const material = new MeshPhongMaterial({ color });
   const mesh = new Mesh(geometry, material);
   mesh.scale.set(0.4, 0.8, 0.4);
   mesh.position.set(thrustersDistanceToMainBody, 0, -3);
   mesh.rotateX(Math.degToRad(-95));
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -179,7 +187,7 @@ function buildThruster(isLeft = true, color = "grey", distanceToHull = 0.8) {
  */
 function buildWeapon(position, color = "green") {
   const geometry = new CylinderGeometry(0.2, 0.6, 5, 20);
-  const material = new MeshBasicMaterial({ color });
+  const material = new MeshPhongMaterial({ color });
   const mesh = new Mesh(geometry, material);
   switch (position) {
     case "top":
@@ -202,6 +210,8 @@ function buildWeapon(position, color = "green") {
         "Posição da arma inválida. Tem de ser 'top', 'right' ou 'left'"
       );
   }
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -233,11 +243,11 @@ function getShootDir(targetVec) {
   var vector = targetVec; // is te type vector 3
   targetVec.set(0, 0, 1);
   vector.unproject(camera);
-  var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
+  var ray = new THREE.Ray(
+    sphereBody.position,
+    vector.sub(sphereBody.position).normalize()
+  );
   targetVec.copy(ray.direction);
 }
-
-
-
 
 export default PlayerShip;
