@@ -24,7 +24,7 @@ const playerShip = new PlayerShip();
  * Cria todos os objetos da cena. Chamado apenas uma vez
  */
 function start() {
-  const cameraDistanceToScene = 60;
+  const cameraDistanceToScene = 100;
   // Armazena as duas cameras do jogo: perspetiva e ortogonal
   const cameras = [
     CameraBuilder.buildPerspectiveCamera({
@@ -48,7 +48,7 @@ function start() {
   selectedCamera = cameras[0];
 
   // Cria o cenário
-  const scenario = SceneBuilder.createScenario(100, 50);
+  const scenario = SceneBuilder.createScenario(180, 100);
   scene.add(scenario);
 
   // Cria a nave do herói
@@ -93,16 +93,13 @@ function update() {
   const playerShipObject = scene.getObjectByName("player");
 
   for (let index = 0; index < bullets.length; index++) {
-    if (bullets[index] === undefined)
-      continue;
+    if (bullets[index] === undefined) continue;
     if (bullets[index].alive == false) {
       bullets.splice(index, 1);
       continue;
     }
 
     bullets[index].position.add(bullets[index].velocity);
-
-
   }
 
   if (keyboard.pressed("ArrowLeft"))
@@ -116,8 +113,7 @@ function update() {
   if (keyboard.pressed(" ") && playerShip.canShot <= 0)
     playerShip.shootPlayer(scene, bullets);
   else {
-    if (playerShip.canShot > 0)
-      playerShip.canShot -= 10;
+    if (playerShip.canShot > 0) playerShip.canShot -= 10;
   }
 
   updateEnemiesShips();
@@ -132,7 +128,6 @@ start();
  * Atualiza as posições das naves inimigas
  */
 function updateEnemiesShips() {
-
   enemiesShips.forEach((enemyShip) => {
     let newDestination;
     if (!enemyShip.isMoving()) {
@@ -150,15 +145,12 @@ function updateEnemiesShips() {
   let index = Math.floor(Math.random() * 7);
   if (enemiesShips[index].canShot) {
     if (enemiesShips[index].canShot <= 0) {
-      setTimeout(()=> {
+      setTimeout(() => {
         enemiesShips[index].shootEnimy(scene, bullets);
-      },5000)
-    }
-    else
-      enemiesShips[index].canShot -= 5;
+      }, 5000);
+    } else enemiesShips[index].canShot -= 5;
   } else {
     enemiesShips[index].shootEnimy(scene, bullets);
-
   }
 }
 
