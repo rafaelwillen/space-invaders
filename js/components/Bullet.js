@@ -10,6 +10,7 @@ export default class Bullet extends Mesh {
     const geometry = new SphereGeometry(radio, widthSeq, heightSeq);
     const material = new MeshPhongMaterial({ color: "#ff000f" });
     const bullet = new Mesh(geometry, material);
+    bullet.scale.set(0.5, 0.5, 0.5);
     this.alive = true;
     this.velocity;
     bullet.castShadow = true;
