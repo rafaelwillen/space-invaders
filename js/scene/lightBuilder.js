@@ -1,4 +1,12 @@
-import { DirectionalLight } from "../library/three.module.js";
+import {
+  DirectionalLight,
+  MathUtils,
+  SpotLight,
+  Vector2,
+  Vector3,
+} from "../library/three.module.js";
+
+const SHADOW_MAP_SIZE = 100;
 
 class LightBuilder {
   static buildDirectionalLight() {
@@ -15,6 +23,24 @@ class LightBuilder {
     lightSource.shadow.camera.top = verticalAxis;
     lightSource.shadow.camera.bottom = -verticalAxis;
     lightSource.translateY(30);
+    lightSource.shadow.mapSize = new Vector2(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+    return lightSource;
+  }
+
+  /**
+   *
+   * @param {Vector3} position
+   */
+  static buildSpotLight(position) {
+    const lightSource = new SpotLight("#fff");
+    lightSource.position.copy(position);
+    lightSource.castShadow = true;
+    lightSource.shadow.mapSize = new Vector2(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+    lightSource.shadow.camera.near = 1;
+    lightSource.shadow.camera.far = 500;
+    lightSource.shadow.camera.fov = 45;
+    // lightSource.distance = 40;
+    lightSource.angle = MathUtils.degToRad(30);
     return lightSource;
   }
 }

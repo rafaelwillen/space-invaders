@@ -1,6 +1,8 @@
 import {
   Clock,
   DirectionalLightHelper,
+  SpotLight,
+  SpotLightHelper,
   Vector3,
 } from "./library/three.module.js";
 
@@ -16,6 +18,7 @@ import LightBuilder from "./scene/lightBuilder.js";
 const { scene, renderer } = SceneBuilder.createEssentials();
 const clock = new Clock();
 const directionalLight = LightBuilder.buildDirectionalLight();
+const spotLights = [];
 const keyboard = new KeyboardState();
 let selectedCamera;
 let bullets = [];
@@ -58,8 +61,29 @@ function start() {
   scene.add(scenario);
 
   scene.add(directionalLight);
+  document.addEventListener("keypress", onLightVisibilityToggle);
   const dLightHelper = new DirectionalLightHelper(directionalLight, 5);
+
+  const lightHeight = 30;
+  const topLeftLightSourcePosition = new Vector3(110, lightHeight, 80);
+  const topRightLightSourcePosition = new Vector3(-110, lightHeight, 80);
+  const bottomLeftLightSourcePosition = new Vector3(100, lightHeight, -80);
+  const bottomRightLightSourcePosition = new Vector3(-100, lightHeight, -80);
+
+  spotLights.push(
+    LightBuilder.buildSpotLight(topLeftLightSourcePosition),
+    LightBuilder.buildSpotLight(topRightLightSourcePosition),
+    LightBuilder.buildSpotLight(bottomLeftLightSourcePosition),
+    LightBuilder.buildSpotLight(bottomRightLightSourcePosition)
+  );
+
   scene.add(dLightHelper);
+  spotLights.forEach((spotLight) => {
+    spotLight.visible = false;
+    spotLight.target = scene;
+    const sLightHelper = new SpotLightHelper(spotLight);
+    scene.add(spotLight, sLightHelper);
+  });
 
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
@@ -185,6 +209,27 @@ function cameraChangeEvent(e) {
       break;
     case "6":
       selectedCamera = scene.getObjectByName("orthographic");
+      break;
+  }
+}
+
+function onLightVisibilityToggle(e) {
+  switch (e.key) {
+    case "q":
+    case "Q":
+      directionalLight.visible = !directionalLight.visible;
+      break;
+    case "1":
+      spotLights[0].visible = !spotLights[0].visible;
+      break;
+    case "2":
+      spotLights[1].visible = !spotLights[1].visible;
+      break;
+    case "3":
+      spotLights[2].visible = !spotLights[2].visible;
+      break;
+    case "4":
+      spotLights[3].visible = !spotLights[3].visible;
       break;
   }
 }
