@@ -1,4 +1,8 @@
-import { Clock, Vector3 } from "./library/three.module.js";
+import {
+  Clock,
+  DirectionalLightHelper,
+  Vector3,
+} from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -7,9 +11,11 @@ import PlayerShip from "./ships/playerShip.js";
 import { generateRandomPosition } from "./utilities/movement.js";
 import KeyboardState from "./utilities/keyboardState.js";
 import { getRandomColor } from "./utilities/randomColor.js";
+import LightBuilder from "./scene/lightBuilder.js";
 
 const { scene, renderer } = SceneBuilder.createEssentials();
 const clock = new Clock();
+const directionalLight = LightBuilder.buildDirectionalLight();
 const keyboard = new KeyboardState();
 let selectedCamera;
 let bullets = [];
@@ -50,6 +56,10 @@ function start() {
   // Cria o cenário
   const scenario = SceneBuilder.createScenario(180, 100);
   scene.add(scenario);
+
+  scene.add(directionalLight);
+  const dLightHelper = new DirectionalLightHelper(directionalLight, 5);
+  scene.add(dLightHelper);
 
   // Cria a nave do herói
   const playerShip3DObject = playerShip.build();
