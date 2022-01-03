@@ -34,7 +34,18 @@ class CameraBuilder {
     rotationY = 0,
     rotationZ = 0,
   }) {
-    const camera = new OrthographicCamera(-10, 10, 5, -5, 1, 10000);
+    const horizontalAxis = 55;
+    const verticalAxis = 20;
+    const near = 1;
+    const far = 500;
+    const camera = new OrthographicCamera(
+      -horizontalAxis,
+      horizontalAxis,
+      verticalAxis,
+      -verticalAxis,
+      near,
+      far
+    );
     camera.name = name;
     camera.position.set(x, y, z);
     camera.rotation.set(rotationX, rotationY, rotationZ);
