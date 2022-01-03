@@ -65,7 +65,7 @@ function start() {
     const xPosition = (100 - 22 * (i + 1)) / 2;
     const zPosition = 20;
     enemiesShips.push(
-      new EnemyShip(getRandomColor(), getRandomColor(), 0.1, {
+      new EnemyShip(getRandomColor(), getRandomColor(), 0.4, {
         x: xPosition,
         z: zPosition,
       })
@@ -89,7 +89,7 @@ function start() {
 function update() {
   const delta = clock.getDelta();
   // Move 0.1 pixeis por segundo
-  const moveDistance = 15 * delta;
+  const moveDistance = 30 * delta;
   const playerShipObject = scene.getObjectByName("player");
 
   for (let index = 0; index < bullets.length; index++) {

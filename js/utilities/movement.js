@@ -5,8 +5,8 @@ import { Vector3 } from "../library/three.module.js";
  * @returns {Vector3}
  */
 export function generateRandomPosition() {
-  const scalarX = Math.random() * 45;
-  const scalarZ = Math.random() * 10 + 10;
+  const scalarX = Math.random() * 100;
+  const scalarZ = Math.random() * 10 + 20;
   const newDestination = new Vector3().randomDirection();
   newDestination.x *= scalarX;
   newDestination.z *= scalarZ;
