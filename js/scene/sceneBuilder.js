@@ -8,6 +8,8 @@ import {
   DoubleSide,
   BoxGeometry,
   Math,
+  MeshLambertMaterial,
+  LatheBufferGeometry,
 } from "../library/three.module.js";
 
 class SceneBuilder {
@@ -35,6 +37,7 @@ class SceneBuilder {
     const scene = new Scene();
     const renderer = new WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, innerHeight);
+    renderer.shadowMap.enabled = true;
     document.body.appendChild(renderer.domElement);
     return { scene, renderer };
   }
@@ -49,12 +52,13 @@ class SceneBuilder {
  */
 function buildFloor(width, height, color = "#bbb") {
   const geometry = new PlaneGeometry(width, height);
-  const material = new MeshBasicMaterial({
+  const material = new MeshLambertMaterial({
     color,
     side: DoubleSide,
   });
   const mesh = new Mesh(geometry, material);
   mesh.rotation.x = Math.degToRad(-90);
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -78,7 +82,7 @@ function buildWall(position, width, height, floorSize, color = "grey") {
   const WALL_DEPTH = 0.5;
   let wall;
   let mesh;
-  const material = new MeshBasicMaterial({ color });
+  const material = new MeshLambertMaterial({ color });
   switch (position) {
     case "back":
       wall = new BoxGeometry(width, height, WALL_DEPTH);
@@ -105,6 +109,8 @@ function buildWall(position, width, height, floorSize, color = "grey") {
       mesh.position.z = floorSize.height / -2;
       break;
   }
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 export default SceneBuilder;

@@ -7,6 +7,8 @@ import {
   CylinderGeometry,
   Vector3,
   Object3D,
+  MeshLambertMaterial,
+  MeshPhongMaterial,
 } from "../library/three.module.js";
 import Bullet from "../components/Bullet.js";
 
@@ -195,25 +197,23 @@ class EnemyShip {
     );
   }
 
-  shootEnimy(scene,bullets) {
+  shootEnimy(scene, bullets) {
     const bullet = new Bullet();
     bullet.position.set(
       this.shipObject.position.x,
       this.shipObject.position.y,
       this.shipObject.position.z
-    )
-    bullet.velocity = new Vector3(0,0,-0.5)
+    );
+    bullet.velocity = new Vector3(0, 0, -0.5);
     setTimeout(() => {
       bullet.alive = false;
       scene.remove(bullet);
     }, 2000);
 
-      this.canShot = 100;
-      bullets.push(bullet);
-      scene.add(bullet);
-    
+    this.canShot = 100;
+    bullets.push(bullet);
+    scene.add(bullet);
   }
-
 }
 
 /**
@@ -224,10 +224,12 @@ class EnemyShip {
 function buildRing(color = "#fafafa") {
   const ringScale = 0.9;
   const ringGeometry = new TorusGeometry(10, 2, 3, 50);
-  const ringMaterial = new MeshBasicMaterial({ color });
+  const ringMaterial = new MeshLambertMaterial({ color });
   const ring = new Mesh(ringGeometry, ringMaterial);
   ring.scale.set(ringScale, ringScale, ringScale);
   ring.name = "ring";
+  ring.castShadow = true;
+  ring.receiveShadow = true;
   return ring;
 }
 
@@ -238,10 +240,12 @@ function buildRing(color = "#fafafa") {
  */
 function buildSphere(color = "#f00") {
   const sphereGeometry = new SphereGeometry(8);
-  const sphereMaterial = new MeshBasicMaterial({ color });
+  const sphereMaterial = new MeshPhongMaterial({ color });
   const sphere = new Mesh(sphereGeometry, sphereMaterial);
   sphere.scale.set(1, 1, 0.5);
   sphere.name = "body";
+  sphere.castShadow = true;
+  sphere.receiveShadow = true;
   return sphere;
 }
 
@@ -252,10 +256,12 @@ function buildSphere(color = "#f00") {
  */
 function buildTurret(color = "#888") {
   const turretGeometry = new SphereGeometry(2.4);
-  const turretMaterial = new MeshBasicMaterial({ color });
+  const turretMaterial = new MeshPhongMaterial({ color });
   const turret = new Mesh(turretGeometry, turretMaterial);
   turret.translateZ(-3);
   turret.name = "turret";
+  turret.castShadow = true;
+  turret.receiveShadow = true;
   return turret;
 }
 
@@ -267,13 +273,15 @@ function buildTurret(color = "#888") {
 function buildBarrel(color = "#ff0") {
   const scaleFactor = 0.1;
   const barrelGeometry = new CylinderGeometry(3, 6, 60, 60, 1);
-  const barrelMaterial = new MeshBasicMaterial({ color });
+  const barrelMaterial = new MeshPhongMaterial({ color });
   const barrel = new Mesh(barrelGeometry, barrelMaterial);
   barrel.translateY(-2.1);
   barrel.translateZ(-1.6);
   // Gira o cano da arma -180º
   barrel.rotateZ(-Math.PI);
   barrel.scale.set(scaleFactor, scaleFactor, scaleFactor);
+  barrel.castShadow = true;
+  barrel.receiveShadow = true;
   return barrel;
 }
 
