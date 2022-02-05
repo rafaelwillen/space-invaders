@@ -81,7 +81,6 @@ class EnemyShip {
 
     /* 
       Calcula a distância da posição inicial da nave para o destino com o
-      Teorema de Pitágoras
     */
     const differenceX = Math.abs(posX - newPosX);
     const differenceZ = Math.abs(posZ - newPosZ);

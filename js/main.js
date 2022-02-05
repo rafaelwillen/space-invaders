@@ -1,10 +1,4 @@
-import {
-  Clock,
-  DirectionalLightHelper,
-  SpotLight,
-  SpotLightHelper,
-  Vector3,
-} from "./library/three.module.js";
+import { Clock, Vector3 } from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -61,8 +55,6 @@ function start() {
   scene.add(scenario);
 
   scene.add(directionalLight);
-  // const dLightHelper = new DirectionalLightHelper(directionalLight, 5);
-  // scene.add(dLightHelper);
 
   const lightHeight = 30;
   const topLeftLightSourcePosition = new Vector3(110, lightHeight, 80);
@@ -80,9 +72,7 @@ function start() {
   spotLights.forEach((spotLight) => {
     spotLight.visible = false;
     spotLight.target = scene;
-    // const sLightHelper = new SpotLightHelper(spotLight);
     scene.add(spotLight);
-    // scene.add(sLightHelper)
   });
   document.addEventListener("keypress", onLightVisibilityToggle);
 
@@ -92,7 +82,7 @@ function start() {
   playerShip3DObject.name = "player";
   scene.add(playerShip3DObject);
 
-  const numberOfEnemyShips = 7;
+  const numberOfEnemyShips = 2;
 
   // Cria as naves dos vilões
   for (let i = 0; i < numberOfEnemyShips; i++) {
@@ -177,7 +167,7 @@ function updateEnemiesShips() {
     enemyShip.move(newDestination);
   });
 
-  let index = Math.floor(Math.random() * 7);
+  let index = Math.floor(Math.random() * 2);
   if (enemiesShips[index].canShot) {
     if (enemiesShips[index].canShot <= 0) {
       setTimeout(() => {
