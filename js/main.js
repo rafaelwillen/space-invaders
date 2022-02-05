@@ -82,7 +82,7 @@ function start() {
   playerShip3DObject.name = "player";
   scene.add(playerShip3DObject);
 
-  const numberOfEnemyShips = 2;
+  const numberOfEnemyShips = 7;
 
   // Cria as naves dos vilões
   for (let i = 0; i < numberOfEnemyShips; i++) {
@@ -118,14 +118,25 @@ function update() {
   const playerShipObject = scene.getObjectByName("player");
   const playerShipBox = new Box3().setFromObject(playerShipObject);
 
-  const wallsBox = ["right", "left", "back", "front"].map((position) => {
+  ["right", "left", "back", "front"].forEach((position) => {
     const wall = scene.getObjectByName(`${position}Wall`);
     const box = new Box3().setFromObject(wall);
     if (playerShipBox.intersectsBox(box)) {
       console.log(`Player colides with ${position} wall`);
     }
-    return box;
   });
+
+  const enemyShipBox = enemiesShips.map((enemyShip) =>
+    new Box3().setFromObject(enemyShip.shipObject)
+  );
+
+  for (let i = 0; i < enemyShipBox.length; i++) {
+    for (let j = 0; j < enemyShipBox.length; j++) {
+      if (i !== j && enemyShipBox[i].intersectsBox(enemyShipBox[j])) {
+        console.log("Ship colide with Ship");
+      }
+    }
+  }
 
   for (let index = 0; index < bullets.length; index++) {
     if (bullets[index] === undefined) continue;
@@ -181,11 +192,11 @@ function updateEnemiesShips() {
   if (enemiesShips[index].canShot) {
     if (enemiesShips[index].canShot <= 0) {
       setTimeout(() => {
-        enemiesShips[index].shootEnimy(scene, bullets);
+        enemiesShips[index].shootEnemy(scene, bullets);
       }, 5000);
     } else enemiesShips[index].canShot -= 5;
   } else {
-    enemiesShips[index].shootEnimy(scene, bullets);
+    enemiesShips[index].shootEnemy(scene, bullets);
   }
 }
 

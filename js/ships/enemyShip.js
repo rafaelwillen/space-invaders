@@ -196,7 +196,7 @@ class EnemyShip {
     );
   }
 
-  shootEnimy(scene, bullets) {
+  shootEnemy(scene, bullets) {
     const bullet = new Bullet();
     bullet.position.set(
       this.shipObject.position.x,
