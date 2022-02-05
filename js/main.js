@@ -1,4 +1,4 @@
-import { Clock, Vector3, Box3 } from "./library/three.module.js";
+import { Clock, Vector3, Box3, MathUtils } from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -52,6 +52,7 @@ function start() {
 
   // Cria o cenário
   const scenario = SceneBuilder.createScenario(180, 100);
+  scenario.rotateY(MathUtils.degToRad(180));
   scene.add(scenario);
 
   scene.add(directionalLight);
