@@ -1,4 +1,4 @@
-import { Clock, Vector3 } from "./library/three.module.js";
+import { Clock, Vector3, Box3 } from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -116,6 +116,16 @@ function update() {
   // Move 0.1 pixeis por segundo
   const moveDistance = 30 * delta;
   const playerShipObject = scene.getObjectByName("player");
+  const playerShipBox = new Box3().setFromObject(playerShipObject);
+
+  const wallsBox = ["right", "left", "back", "front"].map((position) => {
+    const wall = scene.getObjectByName(`${position}Wall`);
+    const box = new Box3().setFromObject(wall);
+    if (playerShipBox.intersectsBox(box)) {
+      console.log(`Player colides with ${position} wall`);
+    }
+    return box;
+  });
 
   for (let index = 0; index < bullets.length; index++) {
     if (bullets[index] === undefined) continue;

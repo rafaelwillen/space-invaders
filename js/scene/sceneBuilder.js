@@ -111,6 +111,7 @@ function buildWall(position, width, height, floorSize, color = "grey") {
   }
   mesh.castShadow = true;
   mesh.receiveShadow = true;
+  mesh.name = `${position}Wall`;
   return mesh;
 }
 export default SceneBuilder;
