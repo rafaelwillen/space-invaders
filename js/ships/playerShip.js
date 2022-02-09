@@ -84,6 +84,7 @@ class PlayerShip {
       shipGroup.position.z + 5
     );
     bullet.velocity = new Vector3(0, 0, 0.5);
+    bullet.whoFired = "Player";
     setTimeout(() => {
       bullet.alive = false;
       scene.remove(bullet);

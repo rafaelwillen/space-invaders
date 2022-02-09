@@ -204,6 +204,7 @@ class EnemyShip {
       this.shipObject.position.z
     );
     bullet.velocity = new Vector3(0, 0, -0.5);
+    bullet.whoFired = "Enemy";
     setTimeout(() => {
       bullet.alive = false;
       scene.remove(bullet);

@@ -132,7 +132,7 @@ function update() {
   // Deteção Parede x Jogador
   wallsBox.forEach((wallBox, index) => {
     if (playerShipBox.intersectsBox(wallBox)) {
-      console.log(`Jogador colidiu com parede ${wallPositions[index]}`);
+      // console.log(`Jogador colidiu com parede ${wallPositions[index]}`);
     }
   });
 
@@ -145,7 +145,7 @@ function update() {
   for (let i = 0; i < enemyShipBox.length; i++) {
     for (let j = 0; j < enemyShipBox.length; j++) {
       if (i !== j && enemyShipBox[i].intersectsBox(enemyShipBox[j])) {
-        console.log("Nave inimiga colidiu com nave inimiga");
+        // console.log("Nave inimiga colidiu com nave inimiga");
       }
     }
   }
@@ -162,13 +162,14 @@ function update() {
   bulletsBox.forEach((bulletBox) => {
     wallsBox.forEach((wallBox, index) => {
       if (wallBox.intersectsBox(bulletBox)) {
-        console.log(`Bala colidiu com a parede ${wallPositions[index]}`);
+        // console.log(`Bala colidiu com a parede ${wallPositions[index]}`);
       }
     });
   });
   // Deteção de colisão das balas com as naves inimigas
-  bulletsBox.forEach((bulletBox) => {
+  bulletsBox.forEach((bulletBox, bulletIndex) => {
     enemyShipBox.forEach((enemyShipBox, index) => {
+      if (bullets[bulletIndex].whoFired === "Enemy") return;
       if (bulletBox.intersectsBox(enemyShipBox)) {
         console.log(`Bala colidiu com uma nave inimiga ${index}`);
       }
