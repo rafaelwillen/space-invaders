@@ -21,7 +21,7 @@ let bullets = [];
 /**
  * @type {EnemyShip[]}
  */
-const enemiesShips = [];
+let enemiesShips = [];
 const playerShip = new PlayerShip();
 
 document.querySelector("#start-btn").addEventListener("click", () => {
@@ -161,25 +161,48 @@ function update() {
   // Criação das Bounding Box das balas
   const bulletsBox = bullets.map((bullet) => new Box3().setFromObject(bullet));
   // Deteção de colisão das balas com o jogador
-  bulletsBox.forEach((bulletBox) => {
+  bulletsBox.forEach((bulletBox, bulletIndex) => {
     if (bulletBox.intersectsBox(playerShipBox)) {
       console.log("Bala colidiu com nave do herói");
+      bulletsBox.slice(bulletIndex, 1);
+        bullets.slice(bulletIndex, 1);
+        scene.remove(bulletsBox[bulletIndex]);
+        scene.remove(bullets[bulletIndex]);
+
+        // Aumentar e dimuir vida no heroi
     }
   });
   // Deteção de colisão das balas com as paredes
-  bulletsBox.forEach((bulletBox) => {
+  bulletsBox.forEach((bulletBox, bulletIndex) => {
     wallsBox.forEach((wallBox) => {
       if (wallBox.intersectsBox(bulletBox)) {
         // console.log(`Bala colidiu com a parede ${wallPositions[index]}`);
+          bulletsBox.slice(bulletIndex, 1);
+          bullets.slice(bulletIndex, 1);
+          scene.remove(bulletsBox[bulletIndex]);
+          scene.remove(bullets[bulletIndex]);       
       }
     });
   });
   // Deteção de colisão das balas com as naves inimigas
   bulletsBox.forEach((bulletBox, bulletIndex) => {
-    enemyShipBox.forEach((enemyShipBox, index) => {
+    enemyShipBox.forEach((enemy, index) => {
       if (bullets[bulletIndex].whoFired === "Enemy") return;
-      if (bulletBox.intersectsBox(enemyShipBox)) {
+      if (bulletBox.intersectsBox(enemy)) {
         console.log(`Bala colidiu com uma nave inimiga ${index}`);
+
+        // Remover a Bala
+        bulletsBox.slice(bulletIndex, 1);
+        bullets.slice(bulletIndex, 1);
+        scene.remove(bulletsBox[bulletIndex]);
+        scene.remove(bullets[bulletIndex]);
+
+
+        // Remover o inimigo da cena
+        enemiesShips.slice(index, 1);
+        enemyShipBox.slice(index,1);
+        scene.remove(enemiesShips[index].shipObject);
+        scene.remove(enemyShipBox[index]);
       }
     });
   });
