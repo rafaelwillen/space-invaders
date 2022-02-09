@@ -15,6 +15,7 @@ const directionalLight = LightBuilder.buildDirectionalLight();
 const spotLights = [];
 const keyboard = new KeyboardState();
 let selectedCamera;
+let startGame = false;
 let bullets = [];
 
 /**
@@ -22,6 +23,13 @@ let bullets = [];
  */
 const enemiesShips = [];
 const playerShip = new PlayerShip();
+
+document.querySelector("#start-btn").addEventListener("click", () => {
+  const gameMenu = document.querySelector(".game-menu");
+  gameMenu.style.display = "none";
+  startGame = true;
+  start();
+});
 
 /**
  * Cria todos os objetos da cena. Chamado apenas uma vez
@@ -160,7 +168,7 @@ function update() {
   });
   // Deteção de colisão das balas com as paredes
   bulletsBox.forEach((bulletBox) => {
-    wallsBox.forEach((wallBox, index) => {
+    wallsBox.forEach((wallBox) => {
       if (wallBox.intersectsBox(bulletBox)) {
         // console.log(`Bala colidiu com a parede ${wallPositions[index]}`);
       }
@@ -205,8 +213,6 @@ function update() {
   renderer.render(scene, selectedCamera);
   requestAnimationFrame(update);
 }
-
-start();
 
 /**
  * Atualiza as posições das naves inimigas
