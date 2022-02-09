@@ -164,12 +164,11 @@ function update() {
   bulletsBox.forEach((bulletBox, bulletIndex) => {
     if (bulletBox.intersectsBox(playerShipBox)) {
       console.log("Bala colidiu com nave do herói");
-      bulletsBox.slice(bulletIndex, 1);
-        bullets.slice(bulletIndex, 1);
-        scene.remove(bulletsBox[bulletIndex]);
-        scene.remove(bullets[bulletIndex]);
+      bulletsBox.splice(bulletIndex, 1);
+      bullets.splice(bulletIndex, 1);
+      scene.remove(bullets[bulletIndex]);
 
-        // Aumentar e dimuir vida no heroi
+      // Aumentar e dimuir vida no heroi
     }
   });
   // Deteção de colisão das balas com as paredes
@@ -177,10 +176,13 @@ function update() {
     wallsBox.forEach((wallBox) => {
       if (wallBox.intersectsBox(bulletBox)) {
         // console.log(`Bala colidiu com a parede ${wallPositions[index]}`);
-          bulletsBox.slice(bulletIndex, 1);
-          bullets.slice(bulletIndex, 1);
-          scene.remove(bulletsBox[bulletIndex]);
-          scene.remove(bullets[bulletIndex]);       
+        bulletsBox.splice(bulletIndex, 1);
+        bullets.splice(bulletIndex, 1);
+        scene.remove(bullets[bulletIndex]);
+        scene.remove(bullets[bulletIndex]);
+        scene.remove(bullets[bulletIndex]);
+        scene.remove(bullets[bulletIndex]);
+        scene.remove(bullets[bulletIndex]);
       }
     });
   });
@@ -192,17 +194,17 @@ function update() {
         console.log(`Bala colidiu com uma nave inimiga ${index}`);
 
         // Remover a Bala
-        bulletsBox.slice(bulletIndex, 1);
-        bullets.slice(bulletIndex, 1);
-        scene.remove(bulletsBox[bulletIndex]);
+        bulletsBox.splice(bulletIndex, 1);
+        bullets.splice(bulletIndex, 1);
         scene.remove(bullets[bulletIndex]);
 
-
-        // Remover o inimigo da cena
-        enemiesShips.slice(index, 1);
-        enemyShipBox.slice(index,1);
+        // newShips[index].removeFromParent();
         scene.remove(enemiesShips[index].shipObject);
-        scene.remove(enemyShipBox[index]);
+        // Remover o inimigo da cena
+        enemiesShips.splice(index, 1);
+        enemyShipBox.splice(index, 1);
+        // scene.remove(playerShipObject);
+        // console.log(scene.children);
       }
     });
   });
@@ -255,7 +257,12 @@ function updateEnemiesShips() {
     enemyShip.move(newDestination);
   });
 
-  let index = Math.floor(Math.random() * 2);
+  if (enemiesShips.length == 0) return;
+
+  let index =
+    enemiesShips.length === 1
+      ? Math.floor(Math.random() * enemiesShips.length)
+      : 0;
   if (enemiesShips[index].canShot) {
     if (enemiesShips[index].canShot <= 0) {
       setTimeout(() => {
