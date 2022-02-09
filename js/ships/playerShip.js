@@ -81,7 +81,7 @@ class PlayerShip {
     bullet.position.set(
       shipGroup.position.x,
       shipGroup.position.y,
-      shipGroup.position.z
+      shipGroup.position.z + 5
     );
     bullet.velocity = new Vector3(0, 0, 0.5);
     setTimeout(() => {

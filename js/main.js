@@ -139,6 +139,14 @@ function update() {
     }
   }
 
+  const bulletsBox = bullets.map((bullet) => new Box3().setFromObject(bullet));
+
+  bulletsBox.forEach((bulletBox) => {
+    if (bulletBox.intersectsBox(playerShipBox)) {
+      console.log("Tocou no Jogador");
+    }
+  });
+
   for (let index = 0; index < bullets.length; index++) {
     if (bullets[index] === undefined) continue;
     if (bullets[index].alive == false) {
