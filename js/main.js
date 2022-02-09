@@ -116,35 +116,63 @@ function update() {
   const delta = clock.getDelta();
   // Move 0.1 pixeis por segundo
   const moveDistance = 30 * delta;
+  // Buscar a referência do jogador
   const playerShipObject = scene.getObjectByName("player");
+  // Criar a Bounding Box do jogador
   const playerShipBox = new Box3().setFromObject(playerShipObject);
+  // Armazena as posições das paredes
+  const wallPositions = ["right", "left", "back", "front"];
 
-  ["right", "left", "back", "front"].forEach((position) => {
+  // Cria as Bounding Boxes de cada parede
+  const wallsBox = wallPositions.map((position) => {
     const wall = scene.getObjectByName(`${position}Wall`);
-    const box = new Box3().setFromObject(wall);
-    if (playerShipBox.intersectsBox(box)) {
-      console.log(`Player colides with ${position} wall`);
+    return new Box3().setFromObject(wall);
+  });
+
+  // Deteção Parede x Jogador
+  wallsBox.forEach((wallBox, index) => {
+    if (playerShipBox.intersectsBox(wallBox)) {
+      console.log(`Jogador colidiu com parede ${wallPositions[index]}`);
     }
   });
 
+  // Cria as Bounding Boxes para cada nave inimiga
   const enemyShipBox = enemiesShips.map((enemyShip) =>
     new Box3().setFromObject(enemyShip.shipObject)
   );
 
+  // Deteção de colisão Nave Inimiga x Nave Inimiga
   for (let i = 0; i < enemyShipBox.length; i++) {
     for (let j = 0; j < enemyShipBox.length; j++) {
       if (i !== j && enemyShipBox[i].intersectsBox(enemyShipBox[j])) {
-        console.log("Ship colide with Ship");
+        console.log("Nave inimiga colidiu com nave inimiga");
       }
     }
   }
 
+  // Criação das Bounding Box das balas
   const bulletsBox = bullets.map((bullet) => new Box3().setFromObject(bullet));
-
+  // Deteção de colisão das balas com o jogador
   bulletsBox.forEach((bulletBox) => {
     if (bulletBox.intersectsBox(playerShipBox)) {
-      console.log("Tocou no Jogador");
+      console.log("Bala colidiu com nave do herói");
     }
+  });
+  // Deteção de colisão das balas com as paredes
+  bulletsBox.forEach((bulletBox) => {
+    wallsBox.forEach((wallBox, index) => {
+      if (wallBox.intersectsBox(bulletBox)) {
+        console.log(`Bala colidiu com a parede ${wallPositions[index]}`);
+      }
+    });
+  });
+  // Deteção de colisão das balas com as naves inimigas
+  bulletsBox.forEach((bulletBox) => {
+    enemyShipBox.forEach((enemyShipBox, index) => {
+      if (bulletBox.intersectsBox(enemyShipBox)) {
+        console.log(`Bala colidiu com uma nave inimiga ${index}`);
+      }
+    });
   });
 
   for (let index = 0; index < bullets.length; index++) {
