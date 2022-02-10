@@ -302,12 +302,12 @@ function cameraChangeEvent(e) {
 
 function onLightVisibilityToggle(e) {
   switch (e.key.toLowerCase()) {
-    case "d":
+    case "q":
       if (!pointsLights[1].visible && pointsLights[0].visible) break;
       pointsLights[0].visible = !pointsLights[0].visible;
       pointsLights[1].visible = false;
       break;
-    case "p":
+    case "e":
       if (!pointsLights[0].visible && pointsLights[1].visible) break;
       pointsLights[1].visible = !pointsLights[1].visible;
       pointsLights[0].visible = false;
