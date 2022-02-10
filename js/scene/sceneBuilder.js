@@ -50,7 +50,7 @@ class SceneBuilder {
  * @returns {mesh} O mesh do piso
  */
 function buildFloor(width, height, color = "#bbb") {
-  const geometry = new PlaneGeometry(width, height);
+  const geometry = new PlaneGeometry(width, height, 10, 10);
   const material = new MeshLambertMaterial({
     color,
     side: DoubleSide,
@@ -84,25 +84,25 @@ function buildWall(position, width, height, floorSize, color = "grey") {
   const material = new MeshLambertMaterial({ color });
   switch (position) {
     case "back":
-      wall = new BoxGeometry(width, height, WALL_DEPTH);
+      wall = new BoxGeometry(width, height, WALL_DEPTH, 5, 1, 1);
       mesh = new Mesh(wall, material);
       mesh.position.y = 2.5;
       mesh.position.z = floorSize.height / 2;
       break;
     case "right":
-      wall = new BoxGeometry(WALL_DEPTH, height, width);
+      wall = new BoxGeometry(WALL_DEPTH, height, width, 5, 1, 1);
       mesh = new Mesh(wall, material);
       mesh.position.y = 2.5;
       mesh.position.x = floorSize.width / 2;
       break;
     case "left":
-      wall = new BoxGeometry(WALL_DEPTH, height, width);
+      wall = new BoxGeometry(WALL_DEPTH, height, width, 5, 1, 1);
       mesh = new Mesh(wall, material);
       mesh.position.y = 2.5;
       mesh.position.x = floorSize.width / -2;
       break;
     case "front":
-      wall = new BoxGeometry(width, height, WALL_DEPTH);
+      wall = new BoxGeometry(width, height, WALL_DEPTH, 5, 1, 1);
       mesh = new Mesh(wall, material);
       mesh.position.y = 2.5;
       mesh.position.z = floorSize.height / -2;
