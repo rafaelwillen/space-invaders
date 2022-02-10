@@ -9,7 +9,6 @@ import {
   BoxGeometry,
   Math,
   MeshLambertMaterial,
-  LatheBufferGeometry,
 } from "../library/three.module.js";
 
 class SceneBuilder {

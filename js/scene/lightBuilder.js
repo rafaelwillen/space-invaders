@@ -1,12 +1,13 @@
 import {
   DirectionalLight,
   MathUtils,
+  PointLight,
   SpotLight,
   Vector2,
   Vector3,
 } from "../library/three.module.js";
 
-const SHADOW_MAP_SIZE = 1000;
+const SHADOW_MAP_SIZE = Math.pow(2, 10);
 
 class LightBuilder {
   static buildDirectionalLight() {
@@ -41,6 +42,18 @@ class LightBuilder {
     lightSource.shadow.camera.fov = 45;
     // lightSource.distance = 40;
     lightSource.angle = MathUtils.degToRad(30);
+    return lightSource;
+  }
+
+  /**
+   *
+   * @param {Vector3} position
+   */
+  static buildPointLight(position) {
+    const lightSource = new PointLight("#fff", 10, 180);
+    lightSource.position.copy(position);
+    lightSource.castShadow = true;
+    lightSource.shadow.mapSize = new Vector2(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
     return lightSource;
   }
 }
