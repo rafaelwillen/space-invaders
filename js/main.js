@@ -22,6 +22,7 @@ const keyboard = new KeyboardState();
 let selectedCamera;
 let startGame = false;
 let bullets = [];
+let enableSceneWireframe = false;
 
 /**
  * @type {EnemyShip[]}
@@ -65,6 +66,7 @@ function start() {
 
   // Cria o cenário
   const scenario = SceneBuilder.createScenario(180, 100);
+  scenario.name = "gameScenario";
   scenario.rotateY(MathUtils.degToRad(180));
   scene.add(scenario);
 
@@ -115,6 +117,7 @@ function start() {
   window.addEventListener("resize", windowResizeEvent);
   // Responsável pela mudança de cameras
   window.addEventListener("keydown", cameraChangeEvent);
+  window.addEventListener("keydown", handleSceneWireframeToggle);
   update();
 }
 
@@ -125,6 +128,12 @@ function update() {
   const delta = clock.getDelta();
   // Move 0.1 pixeis por segundo
   const moveDistance = 30 * delta;
+
+  const scenario = scene.getObjectByName("gameScenario");
+  scenario.children.forEach((child) => {
+    child.material.wireframe = enableSceneWireframe;
+  });
+
   // Buscar a referência do jogador
   const playerShipObject = scene.getObjectByName("player");
   // Criar a Bounding Box do jogador
@@ -312,5 +321,11 @@ function onLightVisibilityToggle(e) {
       pointsLights[1].visible = !pointsLights[1].visible;
       pointsLights[0].visible = false;
       break;
+  }
+}
+
+function handleSceneWireframeToggle(e) {
+  if (e.key.toLowerCase() === "w") {
+    enableSceneWireframe = !enableSceneWireframe;
   }
 }
