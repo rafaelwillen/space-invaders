@@ -50,7 +50,7 @@ class LightBuilder {
    * @param {Vector3} position
    */
   static buildPointLight(position) {
-    const lightSource = new PointLight("#fff", 10, 180);
+    const lightSource = new PointLight("#fff", 5, 180);
     lightSource.position.copy(position);
     lightSource.castShadow = true;
     lightSource.shadow.mapSize = new Vector2(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);

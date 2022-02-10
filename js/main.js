@@ -311,12 +311,12 @@ function cameraChangeEvent(e) {
 
 function onLightVisibilityToggle(e) {
   switch (e.key.toLowerCase()) {
-    case "q":
+    case "d":
       if (!pointsLights[1].visible && pointsLights[0].visible) break;
       pointsLights[0].visible = !pointsLights[0].visible;
       pointsLights[1].visible = false;
       break;
-    case "e":
+    case "p":
       if (!pointsLights[0].visible && pointsLights[1].visible) break;
       pointsLights[1].visible = !pointsLights[1].visible;
       pointsLights[0].visible = false;
@@ -325,7 +325,7 @@ function onLightVisibilityToggle(e) {
 }
 
 function handleSceneWireframeToggle(e) {
-  if (e.key.toLowerCase() === "w") {
+  if (e.key.toLowerCase() === "n") {
     enableSceneWireframe = !enableSceneWireframe;
   }
 }
