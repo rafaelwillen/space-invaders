@@ -142,7 +142,36 @@ function update() {
   // Deteção Parede x Jogador
   wallsBox.forEach((wallBox, index) => {
     if (playerShipBox.intersectsBox(wallBox)) {
-      // console.log(`Jogador colidiu com parede ${wallPositions[index]}`);
+      console.log(`Jogador colidiu com parede ${wallPositions[index]}`);
+      const wall = scene.getObjectByName(`${wallPositions[index]}Wall`);
+      if (wallPositions[index] === "left") {
+        if (wall.position.x !== playerShipObject.position.x) {
+          playerShipObject.position.set(
+            -wall.position.x,
+            playerShipObject.position.y,
+            playerShipObject.position.z
+          );
+        }
+
+        while (wall.position.x == playerShipObject.position.x)
+          playerShipObject.position.x += 2;
+      } else if (wallPositions[index] === "right") {
+        playerShipObject.position.set(
+          wall.position.x,
+          playerShipObject.position.y,
+          playerShipObject.position.z
+        );
+        while (wall.position.x == playerShipObject.position.x)
+          playerShipObject.position.x += 2;
+      } else {
+        playerShipObject.position.set(
+          playerShipObject.position.x,
+          playerShipObject.position.y,
+          wall.position.z
+        );
+        while (wall.position.z == playerShipObject.position.z)
+          playerShipObject.position.z += 2;
+      }
     }
   });
 

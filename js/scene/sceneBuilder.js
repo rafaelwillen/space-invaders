@@ -9,6 +9,7 @@ import {
   BoxGeometry,
   Math,
   MeshLambertMaterial,
+  TextureLoader,
 } from "../library/three.module.js";
 
 class SceneBuilder {
@@ -50,9 +51,10 @@ class SceneBuilder {
  * @returns {mesh} O mesh do piso
  */
 function buildFloor(width, height, color = "#bbb") {
+  let texture = new TextureLoader().load("../../assets/MonaLisa.jpg");
   const geometry = new PlaneGeometry(width, height, 10, 10);
   const material = new MeshLambertMaterial({
-    color,
+    map: texture,
     side: DoubleSide,
   });
   const mesh = new Mesh(geometry, material);
