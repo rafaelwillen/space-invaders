@@ -1,4 +1,10 @@
-import { Clock, Vector3, Box3, MathUtils } from "./library/three.module.js";
+import {
+  Clock,
+  Vector3,
+  Box3,
+  MathUtils,
+  PointLightHelper,
+} from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -11,8 +17,7 @@ import LightBuilder from "./scene/lightBuilder.js";
 
 const { scene, renderer } = SceneBuilder.createEssentials();
 const clock = new Clock();
-const directionalLight = LightBuilder.buildDirectionalLight();
-const spotLights = [];
+const pointsLights = [];
 const keyboard = new KeyboardState();
 let selectedCamera;
 let startGame = false;
@@ -63,26 +68,22 @@ function start() {
   scenario.rotateY(MathUtils.degToRad(180));
   scene.add(scenario);
 
-  scene.add(directionalLight);
+  const lightHeight = 5;
+  const leftWallLightSourcePosition = new Vector3(85, lightHeight, 0);
+  const rightWallLightSourcePosition = new Vector3(-85, lightHeight, 0);
 
-  const lightHeight = 30;
-  const topLeftLightSourcePosition = new Vector3(110, lightHeight, 80);
-  const topRightLightSourcePosition = new Vector3(-110, lightHeight, 80);
-  const bottomLeftLightSourcePosition = new Vector3(100, lightHeight, -80);
-  const bottomRightLightSourcePosition = new Vector3(-100, lightHeight, -80);
-
-  spotLights.push(
-    LightBuilder.buildSpotLight(topLeftLightSourcePosition),
-    LightBuilder.buildSpotLight(topRightLightSourcePosition),
-    LightBuilder.buildSpotLight(bottomLeftLightSourcePosition),
-    LightBuilder.buildSpotLight(bottomRightLightSourcePosition)
+  pointsLights.push(
+    LightBuilder.buildPointLight(leftWallLightSourcePosition),
+    LightBuilder.buildPointLight(rightWallLightSourcePosition)
   );
 
-  spotLights.forEach((spotLight) => {
-    spotLight.visible = false;
-    spotLight.target = scene;
-    scene.add(spotLight);
+  pointsLights.forEach((pointLight) => {
+    pointLight.visible = false;
+    const lightHelper = new PointLightHelper(pointLight, 1);
+    scene.add(pointLight);
+    scene.add(lightHelper);
   });
+  pointsLights[0].visible = true;
   document.addEventListener("keypress", onLightVisibilityToggle);
 
   // Cria a nave do herói
@@ -300,22 +301,16 @@ function cameraChangeEvent(e) {
 }
 
 function onLightVisibilityToggle(e) {
-  switch (e.key) {
-    case "q":
-    case "Q":
-      directionalLight.visible = !directionalLight.visible;
+  switch (e.key.toLowerCase()) {
+    case "d":
+      if (!pointsLights[1].visible && pointsLights[0].visible) break;
+      pointsLights[0].visible = !pointsLights[0].visible;
+      pointsLights[1].visible = false;
       break;
-    case "1":
-      spotLights[0].visible = !spotLights[0].visible;
-      break;
-    case "2":
-      spotLights[1].visible = !spotLights[1].visible;
-      break;
-    case "3":
-      spotLights[2].visible = !spotLights[2].visible;
-      break;
-    case "4":
-      spotLights[3].visible = !spotLights[3].visible;
+    case "p":
+      if (!pointsLights[0].visible && pointsLights[1].visible) break;
+      pointsLights[1].visible = !pointsLights[1].visible;
+      pointsLights[0].visible = false;
       break;
   }
 }
