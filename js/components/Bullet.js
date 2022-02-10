@@ -14,8 +14,6 @@ export default class Bullet extends Mesh {
     this.alive = true;
     this.velocity;
     this.whoFired = "";
-    bullet.castShadow = true;
-    bullet.receiveShadow = true;
     return bullet;
   }
 }

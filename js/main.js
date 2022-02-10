@@ -1,10 +1,4 @@
-import {
-  Clock,
-  Vector3,
-  Box3,
-  MathUtils,
-  PointLightHelper,
-} from "./library/three.module.js";
+import { Clock, Vector3, Box3, MathUtils } from "./library/three.module.js";
 
 import SceneBuilder from "./scene/sceneBuilder.js";
 import CameraBuilder from "./scene/cameraBuilder.js";
@@ -81,9 +75,7 @@ function start() {
 
   pointsLights.forEach((pointLight) => {
     pointLight.visible = false;
-    const lightHelper = new PointLightHelper(pointLight, 1);
     scene.add(pointLight);
-    scene.add(lightHelper);
   });
   pointsLights[0].visible = true;
   document.addEventListener("keypress", onLightVisibilityToggle);
