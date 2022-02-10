@@ -51,7 +51,7 @@ class SceneBuilder {
  * @returns {mesh} O mesh do piso
  */
 function buildFloor(width, height, color = "#bbb") {
-  let texture = new TextureLoader().load("/assets/MonaLisa.jpg");
+  let texture = new TextureLoader().load("space-invaders/assets/MonaLisa.jpg");
   const geometry = new PlaneGeometry(width, height, 10, 10);
   const material = new MeshLambertMaterial({
     map: texture,
